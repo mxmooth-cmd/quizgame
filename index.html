@@ -106,6 +106,8 @@
       display: none;
     }
 
+    /* Modus-Auswahl */
+
     .mode-select {
       margin: 12px 0 16px;
       padding: 14px 14px 16px;
@@ -130,7 +132,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .mode-btn {
@@ -139,10 +141,24 @@
     }
 
     .mode-hint {
-      margin: 0;
+      margin: 6px 0 0;
       font-size: 11px;
       color: var(--text-muted);
     }
+
+    .mode-selected {
+      background: linear-gradient(135deg, var(--accent), #22c55e) !important;
+      color: #ffffff !important;
+      box-shadow: 0 8px 18px rgba(22, 163, 74, 0.25);
+    }
+
+    .mode-start-row {
+      margin-top: 8px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* Quiz-Bereich */
 
     .quiz-area {
       margin-top: 10px;
@@ -151,38 +167,53 @@
     .quiz-meta {
       font-size: 12px;
       color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .quiz-meta-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
       margin-bottom: 6px;
     }
 
-    .progress-wrapper {
-      margin-bottom: 10px;
+    .quiz-mode-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent-dark);
     }
 
-    .progress-bar-bg {
+    .quiz-question-counter {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .progress-wrapper {
       width: 100%;
-      height: 8px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 6px;
       border-radius: 999px;
-      background: #d1fae5;
+      background: rgba(148, 163, 184, 0.3);
       overflow: hidden;
     }
 
-    .progress-bar-fill {
+    .progress-fill {
       height: 100%;
       width: 0%;
+      border-radius: 999px;
       background: linear-gradient(90deg, var(--accent), #22c55e);
-      transition: width 0.25s ease;
-    }
-
-    .progress-text {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 4px;
+      transition: width 0.2s ease;
     }
 
     #questions-container {
       display: flex;
       flex-direction: column;
       gap: 14px;
+      min-height: 120px;
     }
 
     .question-card {
@@ -292,24 +323,28 @@
       font-weight: 600;
     }
 
-    .actions {
-      margin-top: 14px;
-      padding-top: 8px;
-      border-top: 1px solid rgba(148, 163, 184, 0.3);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    .empty-message {
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(148, 163, 184, 0.08);
     }
 
-    .actions-row {
+    /* Button-Leiste unten (bleibt stabil) */
+
+    .actions {
+      position: sticky;
+      bottom: 0;
+      margin-top: 16px;
+      padding: 10px 0 8px;
+      border-top: 1px solid rgba(148, 163, 184, 0.3);
+      background: linear-gradient(to top, rgba(243, 247, 245, 0.98), rgba(243, 247, 245, 0.92), transparent);
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       justify-content: flex-end;
-    }
-
-    .actions-row-check {
-      margin-top: 2px;
+      z-index: 5;
     }
 
     .btn {
@@ -346,6 +381,11 @@
       background: #d7ecdf;
     }
 
+    .btn-compact {
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+
     #score {
       margin-top: 10px;
     }
@@ -357,31 +397,55 @@
       color: var(--accent-dark);
       font-size: 13px;
       display: inline-flex;
-      flex-wrap: wrap;
       align-items: baseline;
       gap: 6px;
+      flex-wrap: wrap;
     }
 
     .score-banner strong {
       font-weight: 600;
     }
 
-    .score-banner.pass {
-      background: #dcfce7;
+    /* Ergebnis-Seite */
+
+    #results-section {
+      margin-top: 20px;
+    }
+
+    #results-section h2 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 18px;
       color: var(--accent-dark);
     }
 
-    .score-banner.fail {
-      background: var(--danger-soft);
+    #results-note-text {
+      margin-top: 6px;
+      margin-bottom: 12px;
+    }
+
+    #results-container {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .result-note {
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .result-note.correct {
+      color: var(--accent-dark);
+    }
+
+    .result-note.incorrect {
       color: var(--danger);
     }
 
-    .empty-message {
-      font-size: 13px;
+    .result-note.unanswered {
       color: var(--text-muted);
-      padding: 10px 12px;
-      border-radius: 12px;
-      background: rgba(148, 163, 184, 0.08);
     }
 
     @media (max-width: 640px) {
@@ -390,15 +454,12 @@
       }
 
       .actions {
-        align-items: stretch;
-      }
-
-      .actions-row {
-        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
       }
 
       .btn {
-        width: 100%;
+        flex: 1 1 45%;
       }
 
       .mode-buttons {
@@ -423,7 +484,7 @@
         <span id="tagline-label">Construction English · Quiz</span>
       </div>
       <h1>Prüfungstraining – Multiple Choice</h1>
-      <p>Wähle zuerst einen Modus. Danach bekommst du die Fragen nacheinander angezeigt, mit kurzer Begründung nach dem Auswerten.</p>
+      <p>Wähle zuerst einen Modus. Danach bekommst du die Fragen nacheinander angezeigt und kannst jede Antwort prüfen oder am Ende alle Antworten auf einmal auswerten.</p>
       <div class="summary-bar">
         <div class="summary-pill">
           <span class="icon">📚</span>
@@ -431,11 +492,12 @@
         </div>
         <div class="summary-pill">
           <span class="icon">✅</span>
-          <span>Direktes Feedback + Begründung (DE/EN)</span>
+          <span>Direktes Feedback + Schluss-Auswertung</span>
         </div>
       </div>
     </header>
 
+    <!-- MODUS-AUSWAHL -->
     <section id="mode-select" class="mode-select">
       <h2>Modus wählen</h2>
       <p class="mode-description">
@@ -444,36 +506,54 @@
       <div class="mode-buttons">
         <button class="btn btn-secondary mode-btn" data-mode="normal">Normal mode</button>
         <button class="btn btn-secondary mode-btn" data-mode="shuffle">Shuffle mode</button>
-        <button class="btn btn-primary mode-btn" data-mode="smart">Smart learning mode</button>
+        <button class="btn btn-secondary mode-btn" data-mode="smart">Smart learning mode</button>
+      </div>
+      <div class="mode-start-row">
+        <button class="btn btn-primary" id="start-mode-btn">Diesen Modus starten</button>
       </div>
       <p class="mode-hint">
         Smart learning: Fragen, die du mehrmals hintereinander richtig hast, werden im Lernmodus nach und nach ausgeblendet (im Browser gespeichert).
       </p>
     </section>
 
+    <!-- QUIZ-BEREICH -->
     <section id="quiz-area" class="quiz-area hidden">
-      <div id="quiz-meta" class="quiz-meta"></div>
-      <div class="progress-wrapper">
-        <div class="progress-bar-bg">
-          <div id="progress-bar-fill" class="progress-bar-fill"></div>
+      <div id="quiz-meta" class="quiz-meta">
+        <div class="quiz-meta-top">
+          <div>
+            <div id="mode-label" class="quiz-mode-label">Modus: –</div>
+            <div id="question-counter" class="quiz-question-counter">Frage 0 von 0</div>
+          </div>
+          <button class="btn btn-secondary btn-compact" id="back-btn">Modus wechseln</button>
         </div>
-        <div id="progress-text" class="progress-text"></div>
+        <div class="progress-wrapper">
+          <div class="progress-track">
+            <div class="progress-fill" id="progress-bar-inner"></div>
+          </div>
+        </div>
       </div>
 
       <main id="questions-container"></main>
 
       <div class="actions">
-        <div class="actions-row">
-          <button class="btn btn-secondary" id="back-btn">Modus wechseln</button>
-          <button class="btn btn-secondary" id="next-btn">Nächste Frage</button>
-        </div>
-        <div class="actions-row actions-row-check">
-          <button class="btn btn-primary" id="check-btn">Diese Antwort prüfen</button>
-          <button class="btn btn-secondary" id="check-all-btn">Alle Antworten prüfen</button>
-        </div>
+        <button class="btn btn-secondary" id="prev-btn">Zurück</button>
+        <button class="btn btn-secondary" id="next-btn">Nächste Frage</button>
+        <button class="btn btn-primary" id="check-btn">Antwort prüfen</button>
+        <button class="btn btn-secondary" id="check-all-btn">Alle Antworten prüfen</button>
       </div>
 
       <div id="score"></div>
+    </section>
+
+    <!-- ERGEBNIS-SEITE -->
+    <section id="results-section" class="hidden">
+      <h2>Ergebnisübersicht</h2>
+      <div id="results-summary" class="score-banner"></div>
+      <p id="results-note-text" class="quiz-meta"></p>
+      <div style="margin: 10px 0 12px;">
+        <button class="btn btn-secondary" id="results-back-btn">Zurück zum Quiz</button>
+      </div>
+      <div id="results-container"></div>
     </section>
   </div>
 
@@ -1772,13 +1852,13 @@
     const MASTERY_THRESHOLD = 3;
     const MASTERY_KEY = "construction_quiz_mastery_v1";
 
-    let currentMode = null;       // "normal" | "shuffle" | "smart"
-    let questionOrder = [];       // Array von Frage-Indizes
-    let currentPos = 0;           // Position im questionOrder
-    let totalAnswered = 0;
-    let totalCorrect = 0;
-    let hasCheckedCurrent = false;
+    let currentMode = null;        // "normal" | "shuffle" | "smart"
+    let questionOrder = [];        // Array von Frage-Indizes
+    let currentPos = 0;            // Position im questionOrder
     let mastery = {};
+    let selectedModeForStart = null;
+    let userAnswers = new Array(questions.length).fill(null);   // Index: global question index
+    let questionChecked = new Array(questions.length).fill(false);
 
     const modeLabels = {
       normal: "Normal mode",
@@ -1818,38 +1898,6 @@
       return questionOrder[currentPos];
     }
 
-    function updateProgress() {
-      const bar = document.getElementById("progress-bar-fill");
-      const text = document.getElementById("progress-text");
-      if (!bar || !text) return;
-
-      const total = questionOrder.length;
-      const pos = total > 0 ? currentPos + 1 : 0;
-      const percent = total > 0 ? Math.round((pos / total) * 100) : 0;
-
-      bar.style.width = percent + "%";
-      if (total > 0) {
-        text.textContent = `Fortschritt: Frage ${pos} von ${total} (${percent}%)`;
-      } else {
-        text.textContent = "Fortschritt: 0%";
-      }
-    }
-
-    function updateMeta() {
-      const meta = document.getElementById("quiz-meta");
-      if (!currentMode) {
-        meta.textContent = "";
-        return;
-      }
-      const label = modeLabels[currentMode] || "";
-      const total = questionOrder.length;
-      const pos = total > 0 ? currentPos + 1 : 0;
-      meta.textContent = total
-        ? `Modus: ${label} · Frage ${pos} von ${total}`
-        : `Modus: ${label} · keine Fragen verfügbar`;
-      updateProgress();
-    }
-
     function updateTagline() {
       const tag = document.getElementById("tagline-label");
       if (!currentMode) {
@@ -1859,43 +1907,51 @@
       tag.textContent = `Construction English · ${modeLabels[currentMode]}`;
     }
 
-    function getEnglishHelper(q) {
-      switch (q.category) {
-        case "Conditionals":
-          return "This option uses the correct conditional form for the given time and situation.";
-        case "Narrative tenses":
-          return "This option uses the correct narrative tense sequence for the context.";
-        case "Describing trends":
-          return "This word best matches the described trend movement.";
-        case "Find the odd one out":
-          return "This sentence is the only one whose meaning differs from the others.";
-        case "Civil engineering vocabulary":
-          return "This term correctly matches the given technical definition.";
-        case "Civil engineering":
-          return "This definition best matches the civil engineering concept mentioned.";
-        case "Green building":
-          return "This answer correctly describes the green building material or concept.";
-        case "Skyscrapers":
-          return "This statement is historically and technically correct for the skyscraper topic.";
-        case "Make and do":
-          return "This verb collocates correctly in this fixed expression.";
-        default:
-          return "This is the best answer for the situation described in the question.";
-      }
-    }
+    function updateMeta() {
+      const modeLabelEl = document.getElementById("mode-label");
+      const counterEl = document.getElementById("question-counter");
+      const progressBar = document.getElementById("progress-bar-inner");
 
-    function updateScoreBanner() {
-      const scoreDiv = document.getElementById("score");
-      if (totalAnswered === 0) {
-        scoreDiv.innerHTML = "";
+      if (!currentMode || !questionOrder.length) {
+        modeLabelEl.textContent = "Modus: –";
+        counterEl.textContent = "Keine Fragen im aktuellen Modus";
+        progressBar.style.width = "0%";
         return;
       }
-      const percent = Math.round((totalCorrect / totalAnswered) * 100);
-      scoreDiv.innerHTML = `
-        <div class="score-banner">
-          Bisher richtig: <strong>${totalCorrect}</strong> von <strong>${totalAnswered}</strong> (${percent}%)
-        </div>
-      `;
+
+      const label = modeLabels[currentMode] || "";
+      const total = questionOrder.length;
+      const pos = currentPos + 1;
+
+      modeLabelEl.textContent = `Modus: ${label}`;
+      counterEl.textContent = `Frage ${pos} von ${total}`;
+
+      const progress = (pos / total) * 100;
+      progressBar.style.width = `${progress}%`;
+    }
+
+    // =========================
+    //  RENDER CURRENT QUESTION
+    // =========================
+    function applyEvaluationStyles(card, q, selectedIndex) {
+      const optionLabels = card.querySelectorAll(".option");
+      optionLabels.forEach((opt, i) => {
+        opt.classList.remove("correct", "incorrect", "unselected-correct");
+        if (i === q.correctIndex) {
+          opt.classList.add("correct");
+          if (selectedIndex !== q.correctIndex && selectedIndex !== null && selectedIndex !== -1) {
+            opt.classList.add("unselected-correct");
+          }
+        }
+        if (selectedIndex === i && selectedIndex !== q.correctIndex) {
+          opt.classList.add("incorrect");
+        }
+      });
+
+      const expl = card.querySelector(".explanation");
+      if (expl) {
+        expl.classList.add("visible");
+      }
     }
 
     function renderCurrentQuestion() {
@@ -1925,8 +1981,7 @@
 
       const indexLabel = document.createElement("div");
       indexLabel.className = "question-index";
-      const questionNumber = globalIndex + 1;
-      indexLabel.textContent = `Frage ${questionNumber}`;
+      indexLabel.textContent = `Frage ${globalIndex + 1}`;
 
       header.appendChild(title);
       header.appendChild(indexLabel);
@@ -1971,15 +2026,23 @@
 
       const explanation = document.createElement("div");
       explanation.className = "explanation";
-      const helperEn = getEnglishHelper(q);
-      explanation.innerHTML = `<strong>Begründung (DE):</strong> ${q.explanation}<br><strong>Explanation (EN):</strong> ${helperEn}`;
+      explanation.innerHTML = `<strong>Begründung:</strong> ${q.explanation}`;
 
       card.appendChild(optionsWrapper);
       card.appendChild(explanation);
-
       container.appendChild(card);
 
-      hasCheckedCurrent = false;
+      // Auswahl wiederherstellen, falls vorhanden
+      const storedAnswer = userAnswers[globalIndex];
+      if (storedAnswer !== null) {
+        const radios = card.querySelectorAll('input[type="radio"]');
+        if (radios[storedAnswer]) {
+          radios[storedAnswer].checked = true;
+        }
+        if (questionChecked[globalIndex]) {
+          applyEvaluationStyles(card, q, storedAnswer);
+        }
+      }
     }
 
     // =========================
@@ -1988,9 +2051,10 @@
     function startMode(mode) {
       currentMode = mode;
       mastery = loadMastery();
-      totalAnswered = 0;
-      totalCorrect = 0;
-      hasCheckedCurrent = false;
+
+      // Antworten & Prüfstatus zurücksetzen
+      userAnswers.fill(null);
+      questionChecked.fill(false);
 
       const allIndices = questions.map((_, i) => i);
       if (mode === "normal") {
@@ -2008,44 +2072,44 @@
         questionOrder = allIndices;
       }
 
-      document.getElementById("score").innerHTML = "";
       currentPos = 0;
       updateTagline();
 
       document.getElementById("mode-select").classList.add("hidden");
       document.getElementById("quiz-area").classList.remove("hidden");
+      document.getElementById("results-section").classList.add("hidden");
+      document.getElementById("score").innerHTML = "";
 
       renderCurrentQuestion();
       updateMeta();
-      updateScoreBanner();
     }
 
     function backToModeSelect() {
       currentMode = null;
       questionOrder = [];
       currentPos = 0;
-      totalAnswered = 0;
-      totalCorrect = 0;
-      hasCheckedCurrent = false;
 
       document.getElementById("quiz-area").classList.add("hidden");
+      document.getElementById("results-section").classList.add("hidden");
       document.getElementById("mode-select").classList.remove("hidden");
       document.getElementById("questions-container").innerHTML = "";
       document.getElementById("score").innerHTML = "";
-      document.getElementById("quiz-meta").textContent = "";
 
-      const bar = document.getElementById("progress-bar-fill");
-      const text = document.getElementById("progress-text");
-      if (bar) bar.style.width = "0%";
-      if (text) text.textContent = "";
+      document.getElementById("mode-label").textContent = "Modus: –";
+      document.getElementById("question-counter").textContent = "";
+      document.getElementById("progress-bar-inner").style.width = "0%";
 
       updateTagline();
     }
 
+    // =========================
+    //  EINZELNE FRAGE PRÜFEN
+    // =========================
     function checkCurrentQuestion() {
       if (!questionOrder.length) return;
 
-      const card = document.querySelector(".question-card");
+      const container = document.getElementById("questions-container");
+      const card = container.querySelector(".question-card");
       if (!card) return;
 
       const globalIndex = parseInt(card.dataset.globalIndex, 10);
@@ -2064,131 +2128,254 @@
         return;
       }
 
-      const optionLabels = card.querySelectorAll(".option");
-      optionLabels.forEach((opt, i) => {
-        opt.classList.remove("correct", "incorrect", "unselected-correct");
-        if (i === q.correctIndex) {
-          opt.classList.add("correct");
-          if (selectedIndex !== q.correctIndex) {
-            opt.classList.add("unselected-correct");
-          }
-        }
-        if (selectedIndex === i && selectedIndex !== q.correctIndex) {
-          opt.classList.add("incorrect");
-        }
-      });
+      const wasCorrectBefore =
+        questionChecked[globalIndex] && userAnswers[globalIndex] === q.correctIndex;
 
-      const expl = card.querySelector(".explanation");
-      if (expl) {
-        expl.classList.add("visible");
+      userAnswers[globalIndex] = selectedIndex;
+      questionChecked[globalIndex] = true;
+
+      applyEvaluationStyles(card, q, selectedIndex);
+
+      const nowCorrect = selectedIndex === q.correctIndex;
+      const qId = q.id;
+      const oldStreak = mastery[qId] || 0;
+
+      if (nowCorrect) {
+        mastery[qId] = wasCorrectBefore ? oldStreak : oldStreak + 1;
+      } else {
+        mastery[qId] = 0;
       }
-
-      if (!hasCheckedCurrent) {
-        totalAnswered++;
-        if (selectedIndex === q.correctIndex) {
-          totalCorrect++;
-          const oldStreak = mastery[q.id] || 0;
-          mastery[q.id] = oldStreak + 1;
-        } else {
-          mastery[q.id] = 0;
-        }
-        saveMastery();
-      }
-
-      hasCheckedCurrent = true;
-      updateScoreBanner();
+      saveMastery();
     }
 
+    // =========================
+    //  NAVIGATION
+    // =========================
     function goToNextQuestion() {
       if (!questionOrder.length) return;
-
       if (currentPos < questionOrder.length - 1) {
         currentPos++;
         renderCurrentQuestion();
         updateMeta();
-      } else {
-        const scoreDiv = document.getElementById("score");
-        const percent = questionOrder.length
-          ? Math.round((totalCorrect / questionOrder.length) * 100)
-          : 0;
-        const msg =
-          currentMode === "smart"
-            ? "Du bist mit allen aktuellen Lernfragen durch."
-            : "Du bist am Ende der Fragen in diesem Modus.";
-        scoreDiv.innerHTML = `
-          <div class="score-banner">
-            ${msg} Ergebnis (bezogen auf alle Fragen im Modus): <strong>${totalCorrect}</strong> von <strong>${questionOrder.length}</strong> richtig (${percent}%)
-          </div>
-        `;
       }
     }
 
-    function getGradeInfo(percent) {
-      let grade, label, passed;
-      if (percent < 60) {
-        grade = 5;
-        label = "Nicht bestanden";
-        passed = false;
-      } else if (percent < 70) {
-        grade = 4;
-        label = "Bestanden (Note 4)";
-        passed = true;
-      } else if (percent < 80) {
-        grade = 3;
-        label = "Bestanden (Note 3)";
-        passed = true;
-      } else if (percent < 90) {
-        grade = 2;
-        label = "Bestanden (Note 2)";
-        passed = true;
-      } else {
-        grade = 1;
-        label = "Bestanden (Note 1)";
-        passed = true;
-      }
-      return { grade, label, passed };
-    }
-
-    function checkAllQuestions() {
+    function goToPrevQuestion() {
       if (!questionOrder.length) return;
-
-      // aktuelle Frage sicher prüfen (falls noch nicht geprüft)
-      checkCurrentQuestion();
-
-      const totalQuestions = questionOrder.length;
-      const percent = totalQuestions
-        ? Math.round((totalCorrect / totalQuestions) * 100)
-        : 0;
-      const gradeInfo = getGradeInfo(percent);
-
-      const scoreDiv = document.getElementById("score");
-      const banner = document.createElement("div");
-      banner.className = "score-banner " + (gradeInfo.passed ? "pass" : "fail");
-      banner.innerHTML = `
-        Endergebnis in diesem Modus: <strong>${totalCorrect}</strong> von <strong>${totalQuestions}</strong> richtig (${percent}%). 
-        Note: <strong>${gradeInfo.grade}</strong> – ${gradeInfo.label}.
-        <span style="font-size:12px; opacity:0.9;"> Bestehensgrenze: 60 % (nicht beantwortete Fragen zählen als falsch).</span>
-      `;
-      scoreDiv.innerHTML = "";
-      scoreDiv.appendChild(banner);
+      if (currentPos > 0) {
+        currentPos--;
+        renderCurrentQuestion();
+        updateMeta();
+      }
     }
 
     // =========================
-    //  INIT
+    //  GESAMTAUSWERTUNG
+    // =========================
+    function getGradeInfo(percent) {
+      let grade;
+      let text;
+
+      if (percent < 60) {
+        grade = 5;
+        text = "Unter 60%: Note 5 (nicht bestanden).";
+      } else if (percent < 70) {
+        grade = 4;
+        text = "60–69%: Note 4 (genügend).";
+      } else if (percent < 80) {
+        grade = 3;
+        text = "70–79%: Note 3 (befriedigend).";
+      } else if (percent < 90) {
+        grade = 2;
+        text = "80–89%: Note 2 (gut).";
+      } else {
+        grade = 1;
+        text = "90–100%: Note 1 (sehr gut).";
+      }
+
+      return { grade, passed: percent >= 60, gradeText: text };
+    }
+
+    function evaluateAllQuestions() {
+      if (!questionOrder.length) {
+        alert("In diesem Modus sind keine Fragen vorhanden.");
+        return;
+      }
+
+      let correctCount = 0;
+      const total = questionOrder.length;
+
+      questionOrder.forEach(index => {
+        const q = questions[index];
+        const userAns = userAnswers[index];
+        if (userAns !== null && userAns === q.correctIndex) {
+          correctCount++;
+        }
+      });
+
+      const percent = Math.round((correctCount / total) * 100);
+      const { grade, passed, gradeText } = getGradeInfo(percent);
+
+      const scoreDiv = document.getElementById("score");
+      scoreDiv.innerHTML = `
+        <div class="score-banner">
+          Ergebnis: <strong>${correctCount}</strong> von <strong>${total}</strong> richtig
+          (<strong>${percent}%</strong>) · Note: <strong>${grade}</strong> – ${passed ? "bestanden" : "nicht bestanden"}
+        </div>
+        <div style="margin-top:6px;font-size:12px;color:var(--text-muted);">
+          ${gradeText}
+        </div>
+      `;
+
+      let showBtn = document.getElementById("show-results-btn");
+      if (!showBtn) {
+        showBtn = document.createElement("button");
+        showBtn.id = "show-results-btn";
+        showBtn.className = "btn btn-secondary";
+        showBtn.style.marginTop = "10px";
+        showBtn.textContent = "Ergebnisse anzeigen";
+        scoreDiv.appendChild(showBtn);
+
+        showBtn.addEventListener("click", () => {
+          showResultsPage(correctCount, total, percent, grade, passed, gradeText);
+        });
+      }
+    }
+
+    // =========================
+    //  ERGEBNISSE-SEITE
+    // =========================
+    function showResultsPage(correctCount, total, percent, grade, passed, gradeText) {
+      const quizArea = document.getElementById("quiz-area");
+      const resultsSection = document.getElementById("results-section");
+      const resultsSummary = document.getElementById("results-summary");
+      const resultsNoteText = document.getElementById("results-note-text");
+      const resultsContainer = document.getElementById("results-container");
+
+      resultsSummary.innerHTML = `
+        Ergebnis: <strong>${correctCount}</strong> von <strong>${total}</strong> richtig
+        (<strong>${percent}%</strong>) · Note: <strong>${grade}</strong> – ${passed ? "bestanden" : "nicht bestanden"}
+      `;
+      resultsNoteText.textContent = gradeText;
+      resultsContainer.innerHTML = "";
+
+      // Alle Fragen des aktuellen Modus listen
+      questionOrder.forEach((index, pos) => {
+        const q = questions[index];
+        const userAns = userAnswers[index];
+
+        const card = document.createElement("article");
+        card.className = "question-card";
+
+        const header = document.createElement("div");
+        header.className = "question-header";
+
+        const title = document.createElement("div");
+        title.className = "question-title";
+        title.textContent = q.category || "Question";
+
+        const idxLabel = document.createElement("div");
+        idxLabel.className = "question-index";
+        idxLabel.textContent = `Frage ${pos + 1} (ID ${q.id})`;
+
+        header.appendChild(title);
+        header.appendChild(idxLabel);
+        card.appendChild(header);
+
+        const text = document.createElement("div");
+        text.className = "question-text";
+        text.textContent = q.text;
+        card.appendChild(text);
+
+        if (q.stem) {
+          const stem = document.createElement("div");
+          stem.className = "question-subtext";
+          stem.textContent = q.stem;
+          card.appendChild(stem);
+        }
+
+        const optionsWrapper = document.createElement("div");
+        optionsWrapper.className = "options";
+
+        q.options.forEach((optText, optIndex) => {
+          const label = document.createElement("div");
+          label.className = "option";
+
+          const span = document.createElement("div");
+          span.className = "option-label";
+          span.textContent = optText;
+          label.appendChild(span);
+
+          if (optIndex === q.correctIndex) {
+            label.classList.add("correct");
+          }
+          if (userAns === optIndex && userAns !== q.correctIndex) {
+            label.classList.add("incorrect");
+          }
+
+          optionsWrapper.appendChild(label);
+        });
+
+        card.appendChild(optionsWrapper);
+
+        const explanation = document.createElement("div");
+        explanation.className = "explanation visible";
+        explanation.innerHTML = `<strong>Begründung:</strong> ${q.explanation}`;
+        card.appendChild(explanation);
+
+        const note = document.createElement("div");
+        note.className = "result-note";
+        if (userAns === null) {
+          note.classList.add("unanswered");
+          note.textContent = "Keine Antwort ausgewählt.";
+        } else if (userAns === q.correctIndex) {
+          note.classList.add("correct");
+          note.textContent = "Deine Antwort war richtig.";
+        } else {
+          note.classList.add("incorrect");
+          note.textContent = "Deine Antwort war falsch.";
+        }
+        card.appendChild(note);
+
+        resultsContainer.appendChild(card);
+      });
+
+      quizArea.classList.add("hidden");
+      resultsSection.classList.remove("hidden");
+    }
+
+    // =========================
+    //  INIT & EVENT LISTENER
     // =========================
     document.getElementById("total-questions-label").textContent = questions.length.toString();
 
+    // Modus-Buttons: Auswahl merken, noch nicht starten
     document.querySelectorAll(".mode-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         const mode = btn.getAttribute("data-mode");
-        startMode(mode);
+        selectedModeForStart = mode;
+        document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("mode-selected"));
+        btn.classList.add("mode-selected");
       });
+    });
+
+    document.getElementById("start-mode-btn").addEventListener("click", () => {
+      if (!selectedModeForStart) {
+        alert("Bitte wähle zuerst einen Modus.");
+        return;
+      }
+      startMode(selectedModeForStart);
     });
 
     document.getElementById("back-btn").addEventListener("click", backToModeSelect);
     document.getElementById("check-btn").addEventListener("click", checkCurrentQuestion);
     document.getElementById("next-btn").addEventListener("click", goToNextQuestion);
-    document.getElementById("check-all-btn").addEventListener("click", checkAllQuestions);
+    document.getElementById("prev-btn").addEventListener("click", goToPrevQuestion);
+    document.getElementById("check-all-btn").addEventListener("click", evaluateAllQuestions);
+    document.getElementById("results-back-btn").addEventListener("click", () => {
+      document.getElementById("results-section").classList.add("hidden");
+      document.getElementById("quiz-area").classList.remove("hidden");
+    });
   </script>
 </body>
 </html>
