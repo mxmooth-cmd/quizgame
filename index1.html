@@ -151,7 +151,32 @@
     .quiz-meta {
       font-size: 12px;
       color: var(--text-muted);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
+    }
+
+    .progress-wrapper {
+      margin-bottom: 10px;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: #d1fae5;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), #22c55e);
+      transition: width 0.25s ease;
+    }
+
+    .progress-text {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
     }
 
     #questions-container {
@@ -272,9 +297,19 @@
       padding-top: 8px;
       border-top: 1px solid rgba(148, 163, 184, 0.3);
       display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .actions-row {
+      display: flex;
       flex-wrap: wrap;
       gap: 8px;
       justify-content: flex-end;
+    }
+
+    .actions-row-check {
+      margin-top: 2px;
     }
 
     .btn {
@@ -322,12 +357,23 @@
       color: var(--accent-dark);
       font-size: 13px;
       display: inline-flex;
+      flex-wrap: wrap;
       align-items: baseline;
       gap: 6px;
     }
 
     .score-banner strong {
       font-weight: 600;
+    }
+
+    .score-banner.pass {
+      background: #dcfce7;
+      color: var(--accent-dark);
+    }
+
+    .score-banner.fail {
+      background: var(--danger-soft);
+      color: var(--danger);
     }
 
     .empty-message {
@@ -344,8 +390,11 @@
       }
 
       .actions {
-        flex-direction: column-reverse;
         align-items: stretch;
+      }
+
+      .actions-row {
+        flex-direction: column;
       }
 
       .btn {
@@ -382,7 +431,7 @@
         </div>
         <div class="summary-pill">
           <span class="icon">✅</span>
-          <span>Direktes Feedback + Begründung</span>
+          <span>Direktes Feedback + Begründung (DE/EN)</span>
         </div>
       </div>
     </header>
@@ -404,12 +453,24 @@
 
     <section id="quiz-area" class="quiz-area hidden">
       <div id="quiz-meta" class="quiz-meta"></div>
+      <div class="progress-wrapper">
+        <div class="progress-bar-bg">
+          <div id="progress-bar-fill" class="progress-bar-fill"></div>
+        </div>
+        <div id="progress-text" class="progress-text"></div>
+      </div>
+
       <main id="questions-container"></main>
 
       <div class="actions">
-        <button class="btn btn-secondary" id="back-btn">Modus wechseln</button>
-        <button class="btn btn-secondary" id="next-btn">Nächste Frage</button>
-        <button class="btn btn-primary" id="check-btn">Antwort prüfen</button>
+        <div class="actions-row">
+          <button class="btn btn-secondary" id="back-btn">Modus wechseln</button>
+          <button class="btn btn-secondary" id="next-btn">Nächste Frage</button>
+        </div>
+        <div class="actions-row actions-row-check">
+          <button class="btn btn-primary" id="check-btn">Diese Antwort prüfen</button>
+          <button class="btn btn-secondary" id="check-all-btn">Alle Antworten prüfen</button>
+        </div>
       </div>
 
       <div id="score"></div>
@@ -1757,6 +1818,23 @@
       return questionOrder[currentPos];
     }
 
+    function updateProgress() {
+      const bar = document.getElementById("progress-bar-fill");
+      const text = document.getElementById("progress-text");
+      if (!bar || !text) return;
+
+      const total = questionOrder.length;
+      const pos = total > 0 ? currentPos + 1 : 0;
+      const percent = total > 0 ? Math.round((pos / total) * 100) : 0;
+
+      bar.style.width = percent + "%";
+      if (total > 0) {
+        text.textContent = `Fortschritt: Frage ${pos} von ${total} (${percent}%)`;
+      } else {
+        text.textContent = "Fortschritt: 0%";
+      }
+    }
+
     function updateMeta() {
       const meta = document.getElementById("quiz-meta");
       if (!currentMode) {
@@ -1769,6 +1847,7 @@
       meta.textContent = total
         ? `Modus: ${label} · Frage ${pos} von ${total}`
         : `Modus: ${label} · keine Fragen verfügbar`;
+      updateProgress();
     }
 
     function updateTagline() {
@@ -1778,6 +1857,31 @@
         return;
       }
       tag.textContent = `Construction English · ${modeLabels[currentMode]}`;
+    }
+
+    function getEnglishHelper(q) {
+      switch (q.category) {
+        case "Conditionals":
+          return "This option uses the correct conditional form for the given time and situation.";
+        case "Narrative tenses":
+          return "This option uses the correct narrative tense sequence for the context.";
+        case "Describing trends":
+          return "This word best matches the described trend movement.";
+        case "Find the odd one out":
+          return "This sentence is the only one whose meaning differs from the others.";
+        case "Civil engineering vocabulary":
+          return "This term correctly matches the given technical definition.";
+        case "Civil engineering":
+          return "This definition best matches the civil engineering concept mentioned.";
+        case "Green building":
+          return "This answer correctly describes the green building material or concept.";
+        case "Skyscrapers":
+          return "This statement is historically and technically correct for the skyscraper topic.";
+        case "Make and do":
+          return "This verb collocates correctly in this fixed expression.";
+        default:
+          return "This is the best answer for the situation described in the question.";
+      }
     }
 
     function updateScoreBanner() {
@@ -1821,7 +1925,6 @@
 
       const indexLabel = document.createElement("div");
       indexLabel.className = "question-index";
-      // globale Nummer anzeigen:
       const questionNumber = globalIndex + 1;
       indexLabel.textContent = `Frage ${questionNumber}`;
 
@@ -1868,7 +1971,8 @@
 
       const explanation = document.createElement("div");
       explanation.className = "explanation";
-      explanation.innerHTML = `<strong>Begründung:</strong> ${q.explanation}`;
+      const helperEn = getEnglishHelper(q);
+      explanation.innerHTML = `<strong>Begründung (DE):</strong> ${q.explanation}<br><strong>Explanation (EN):</strong> ${helperEn}`;
 
       card.appendChild(optionsWrapper);
       card.appendChild(explanation);
@@ -1929,6 +2033,12 @@
       document.getElementById("questions-container").innerHTML = "";
       document.getElementById("score").innerHTML = "";
       document.getElementById("quiz-meta").textContent = "";
+
+      const bar = document.getElementById("progress-bar-fill");
+      const text = document.getElementById("progress-text");
+      if (bar) bar.style.width = "0%";
+      if (text) text.textContent = "";
+
       updateTagline();
     }
 
@@ -1997,10 +2107,9 @@
         renderCurrentQuestion();
         updateMeta();
       } else {
-        // Am Ende der Fragen im aktuellen Modus
         const scoreDiv = document.getElementById("score");
-        const percent = totalAnswered
-          ? Math.round((totalCorrect / totalAnswered) * 100)
+        const percent = questionOrder.length
+          ? Math.round((totalCorrect / questionOrder.length) * 100)
           : 0;
         const msg =
           currentMode === "smart"
@@ -2008,10 +2117,60 @@
             : "Du bist am Ende der Fragen in diesem Modus.";
         scoreDiv.innerHTML = `
           <div class="score-banner">
-            ${msg} Ergebnis: <strong>${totalCorrect}</strong> von <strong>${totalAnswered}</strong> (${percent}%)
+            ${msg} Ergebnis (bezogen auf alle Fragen im Modus): <strong>${totalCorrect}</strong> von <strong>${questionOrder.length}</strong> richtig (${percent}%)
           </div>
         `;
       }
+    }
+
+    function getGradeInfo(percent) {
+      let grade, label, passed;
+      if (percent < 60) {
+        grade = 5;
+        label = "Nicht bestanden";
+        passed = false;
+      } else if (percent < 70) {
+        grade = 4;
+        label = "Bestanden (Note 4)";
+        passed = true;
+      } else if (percent < 80) {
+        grade = 3;
+        label = "Bestanden (Note 3)";
+        passed = true;
+      } else if (percent < 90) {
+        grade = 2;
+        label = "Bestanden (Note 2)";
+        passed = true;
+      } else {
+        grade = 1;
+        label = "Bestanden (Note 1)";
+        passed = true;
+      }
+      return { grade, label, passed };
+    }
+
+    function checkAllQuestions() {
+      if (!questionOrder.length) return;
+
+      // aktuelle Frage sicher prüfen (falls noch nicht geprüft)
+      checkCurrentQuestion();
+
+      const totalQuestions = questionOrder.length;
+      const percent = totalQuestions
+        ? Math.round((totalCorrect / totalQuestions) * 100)
+        : 0;
+      const gradeInfo = getGradeInfo(percent);
+
+      const scoreDiv = document.getElementById("score");
+      const banner = document.createElement("div");
+      banner.className = "score-banner " + (gradeInfo.passed ? "pass" : "fail");
+      banner.innerHTML = `
+        Endergebnis in diesem Modus: <strong>${totalCorrect}</strong> von <strong>${totalQuestions}</strong> richtig (${percent}%). 
+        Note: <strong>${gradeInfo.grade}</strong> – ${gradeInfo.label}.
+        <span style="font-size:12px; opacity:0.9;"> Bestehensgrenze: 60 % (nicht beantwortete Fragen zählen als falsch).</span>
+      `;
+      scoreDiv.innerHTML = "";
+      scoreDiv.appendChild(banner);
     }
 
     // =========================
@@ -2029,6 +2188,7 @@
     document.getElementById("back-btn").addEventListener("click", backToModeSelect);
     document.getElementById("check-btn").addEventListener("click", checkCurrentQuestion);
     document.getElementById("next-btn").addEventListener("click", goToNextQuestion);
+    document.getElementById("check-all-btn").addEventListener("click", checkAllQuestions);
   </script>
 </body>
 </html>
