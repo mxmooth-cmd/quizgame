@@ -1,0 +1,2034 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Construction English Quiz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #f3f7f5;
+      --card-bg: #ffffff;
+      --accent: #16a34a;
+      --accent-soft: #e7f7ec;
+      --accent-dark: #166534;
+      --danger: #dc2626;
+      --danger-soft: #fee2e2;
+      --border-soft: #d4e4da;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --radius-card: 18px;
+      --shadow-soft: 0 10px 30px rgba(15, 118, 110, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #e0f2f1 0, var(--bg) 40%);
+      color: var(--text-main);
+    }
+
+    .app {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 16px 12px 40px;
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: 0.02em;
+      color: var(--accent-dark);
+    }
+
+    header p {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .tagline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent-dark);
+      background: rgba(22, 163, 74, 0.08);
+      padding: 4px 10px;
+      border-radius: 999px;
+      width: fit-content;
+    }
+
+    .tagline-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .summary-bar {
+      margin-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .summary-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #e5f3ea;
+      color: var(--accent-dark);
+      font-weight: 500;
+    }
+
+    .summary-pill span.icon {
+      font-size: 14px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .mode-select {
+      margin: 12px 0 16px;
+      padding: 14px 14px 16px;
+      border-radius: 16px;
+      background: rgba(22, 163, 74, 0.04);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    .mode-select h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      color: var(--accent-dark);
+    }
+
+    .mode-description {
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .mode-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .mode-btn {
+      flex: 1 1 30%;
+      min-width: 100px;
+    }
+
+    .mode-hint {
+      margin: 0;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .quiz-area {
+      margin-top: 10px;
+    }
+
+    .quiz-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    #questions-container {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .question-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-card);
+      padding: 14px 14px 16px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .question-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-dark);
+    }
+
+    .question-index {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .question-text {
+      font-size: 15px;
+      font-weight: 500;
+      margin: 4px 0 6px;
+      line-height: 1.4;
+    }
+
+    .question-subtext {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .options {
+      margin-top: 4px;
+    }
+
+    .option {
+      border-radius: 12px;
+      border: 1px solid var(--border-soft);
+      padding: 8px 10px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+      margin-bottom: 6px;
+      background: #fdfdfd;
+    }
+
+    .option:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(22, 163, 74, 0.08);
+    }
+
+    .option input {
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+
+    .option-label {
+      font-size: 14px;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .option.correct {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .option.incorrect {
+      border-color: var(--danger);
+      background: var(--danger-soft);
+    }
+
+    .option.unselected-correct {
+      border-style: dashed;
+      border-color: var(--accent);
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 8px;
+      padding: 6px 8px;
+      border-radius: 10px;
+      background: #edf7f1;
+      font-size: 12px;
+      color: var(--accent-dark);
+    }
+
+    .explanation.visible {
+      display: block;
+    }
+
+    .explanation strong {
+      font-weight: 600;
+    }
+
+    .actions {
+      margin-top: 14px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(148, 163, 184, 0.3);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 9px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.12s ease;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #22c55e);
+      color: #ffffff;
+      box-shadow: 0 10px 20px rgba(22, 163, 74, 0.25);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(22, 163, 74, 0.3);
+    }
+
+    .btn-secondary {
+      background: #e5f3ea;
+      color: var(--accent-dark);
+    }
+
+    .btn-secondary:hover {
+      background: #d7ecdf;
+    }
+
+    #score {
+      margin-top: 10px;
+    }
+
+    .score-banner {
+      border-radius: 999px;
+      padding: 8px 14px;
+      background: #dcfce7;
+      color: var(--accent-dark);
+      font-size: 13px;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .score-banner strong {
+      font-weight: 600;
+    }
+
+    .empty-message {
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(148, 163, 184, 0.08);
+    }
+
+    @media (max-width: 640px) {
+      header h1 {
+        font-size: 20px;
+      }
+
+      .actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .mode-buttons {
+        flex-direction: column;
+      }
+
+      .mode-btn {
+        width: 100%;
+      }
+
+      .question-card {
+        padding: 12px 12px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="tagline">
+        <span class="tagline-dot"></span>
+        <span id="tagline-label">Construction English · Quiz</span>
+      </div>
+      <h1>Prüfungstraining – Multiple Choice</h1>
+      <p>Wähle zuerst einen Modus. Danach bekommst du die Fragen nacheinander angezeigt, mit kurzer Begründung nach dem Auswerten.</p>
+      <div class="summary-bar">
+        <div class="summary-pill">
+          <span class="icon">📚</span>
+          <span><span id="total-questions-label"></span> Fragen insgesamt</span>
+        </div>
+        <div class="summary-pill">
+          <span class="icon">✅</span>
+          <span>Direktes Feedback + Begründung</span>
+        </div>
+      </div>
+    </header>
+
+    <section id="mode-select" class="mode-select">
+      <h2>Modus wählen</h2>
+      <p class="mode-description">
+        Du kannst normal üben, die Fragen mischen oder im Lernmodus arbeiten, bei dem gut beherrschte Fragen nach einiger Zeit wegfallen.
+      </p>
+      <div class="mode-buttons">
+        <button class="btn btn-secondary mode-btn" data-mode="normal">Normal mode</button>
+        <button class="btn btn-secondary mode-btn" data-mode="shuffle">Shuffle mode</button>
+        <button class="btn btn-primary mode-btn" data-mode="smart">Smart learning mode</button>
+      </div>
+      <p class="mode-hint">
+        Smart learning: Fragen, die du mehrmals hintereinander richtig hast, werden im Lernmodus nach und nach ausgeblendet (im Browser gespeichert).
+      </p>
+    </section>
+
+    <section id="quiz-area" class="quiz-area hidden">
+      <div id="quiz-meta" class="quiz-meta"></div>
+      <main id="questions-container"></main>
+
+      <div class="actions">
+        <button class="btn btn-secondary" id="back-btn">Modus wechseln</button>
+        <button class="btn btn-secondary" id="next-btn">Nächste Frage</button>
+        <button class="btn btn-primary" id="check-btn">Antwort prüfen</button>
+      </div>
+
+      <div id="score"></div>
+    </section>
+  </div>
+
+  <script>
+    // =========================
+    //  FRAGEN (112 Stück)
+    // =========================
+    const questions = [
+      {
+        id: 1,
+        category: "Find the odd one out",
+        text: "Which answer has a different meaning than the others?",
+        stem: "The real estate market experienced a sudden downturn, leading to a plummeting in the number of commercial construction projects.",
+        options: [
+          "The real estate market experienced a sudden decline, leading to a slight slump in commercial construction projects.",
+          "The real estate market underwent a rapid decline, resulting in a deceleration of commercial construction projects.",
+          "A sudden decrease in the real estate market led to a slowdown in commercial construction projects.",
+          "The real estate market saw a sharp drop, causing a deceleration in commercial construction projects."
+        ],
+        correctIndex: 0,
+        explanation: "„Plummeting“ beschreibt einen starken Einbruch; nur „slight slump“ steht für einen leichten Rückgang und weicht damit ab."
+      },
+      {
+        id: 2,
+        category: "Civil engineering vocabulary",
+        text: "Complete the sentence with the correct term.",
+        stem: "Stress is a force per unit of ______ and is measured in Pascals.",
+        options: ["load","area","pressure","extension"],
+        correctIndex: 1,
+        explanation: "Spannung (stress) ist Kraft pro Fläche, also force per unit area."
+      },
+      {
+        id: 3,
+        category: "Green building",
+        text: "Which point is not a characteristic of bamboo in green building?",
+        stem: null,
+        options: [
+          "It is used as a byproduct.",
+          "It is strong.",
+          "It is cheap.",
+          "It grows fast."
+        ],
+        correctIndex: 0,
+        explanation: "Bambus wird meist gezielt angebaut und nicht nur als Nebenprodukt verwendet; die anderen Punkte sind typische Vorteile."
+      },
+      {
+        id: 4,
+        category: "Conditionals",
+        text: "Complete the sentence correctly.",
+        stem: "If the architects had revised the plans, the building ______ last week's storm.",
+        options: [
+          "were withstanding last week's storm.",
+          "withstands last week's storm.",
+          "would have withstood last week's storm.",
+          "would withstand last week's storm."
+        ],
+        correctIndex: 2,
+        explanation: "Das ist ein 3rd Conditional: if + past perfect → would have + past participle."
+      },
+      {
+        id: 5,
+        category: "Green building",
+        text: "What are straw bales used for in houses?",
+        stem: null,
+        options: [
+          "tightly compacted dirt in wooden forms",
+          "a paving system that allows the grass to grow between steel reinforced concrete",
+          "insulation of the walls",
+          "as load-bearing walls"
+        ],
+        correctIndex: 2,
+        explanation: "Strohballen dienen vor allem als umweltfreundliche Wärmedämmung für Wände."
+      },
+      {
+        id: 6,
+        category: "Civil engineering vocabulary",
+        text: "Complete the sentence with the correct term.",
+        stem: "A load that never changes such as the self-weight of a structure is called ______",
+        options: ["point load","dead load","live load","pressure"],
+        correctIndex: 1,
+        explanation: "Konstante Lasten wie das Eigengewicht heißen „dead load“ (ständige Last)."
+      },
+      {
+        id: 7,
+        category: "Narrative tenses",
+        text: "Complete the sentence correctly.",
+        stem: "The project manager has recently revised the Gantt chart, which now ______ additional milestones for the future.",
+        options: ["included","includes","has included","is including"],
+        correctIndex: 1,
+        explanation: "Mit „now“ verwenden wir simple present: „which now includes …“."
+      },
+      {
+        id: 8,
+        category: "Skyscrapers",
+        text: "Reims: Gothic Cathedral – What new equipment was not used during construction?",
+        stem: null,
+        options: ["Crane","\"Squirrel\"","Wheelbarrow","Bulldozer"],
+        correctIndex: 3,
+        explanation: "Bulldozer sind moderne Maschinen; Kräne und einfache Geräte gab es bereits in anderer Form."
+      },
+      {
+        id: 9,
+        category: "Find the odd one out",
+        text: "Which answer has a different meaning than the others?",
+        stem: "The rapid urbanization in emerging markets has led to a demand for infrastructure projects that shows no sign of flattening out in the near future.",
+        options: [
+          "… has caused a demand … that exhibits no indication of decreasing in the near future.",
+          "… has given rise to a demand … that presents no evidence of leveling off in the near future.",
+          "… has given rise to a demand … that demonstrates no sign of fluctuating in the near future.",
+          "… has led to a demand … that demonstrates no sign of slowing down in the near future."
+        ],
+        correctIndex: 2,
+        explanation: "„Fluctuating“ bedeutet Schwanken (auf und ab); die anderen Ausdrücke meinen, dass die Nachfrage nicht nachlässt."
+      },
+      {
+        id: 10,
+        category: "Skyscrapers",
+        text: "How did Elisha Otis prove that his elevators were safe?",
+        stem: null,
+        options: [
+          "He stood on an elevator platform as his assistant cut the hoisting cable.",
+          "He put a pig on an elevator platform and cut the hoisting cable.",
+          "He put a boulder on an elevator platform and cut the hoisting cable.",
+          "He stood on an elevator platform and jumped up and down."
+        ],
+        correctIndex: 0,
+        explanation: "Berühmt ist seine Demonstration, bei der er selbst auf der Plattform stand, als das Seil gekappt wurde."
+      },
+      {
+        id: 11,
+        category: "Civil engineering vocabulary",
+        text: "Read the definition and choose the correct term.",
+        stem: "A hinged deck with a counterweight that balances the span throughout the upward swing, providing clearance for boat traffic.",
+        options: ["suspension bridge","swing bridge","bascule bridge","lift bridge"],
+        correctIndex: 2,
+        explanation: "Eine Klappbrücke mit Gegengewicht heißt „bascule bridge“."
+      },
+      {
+        id: 12,
+        category: "Civil engineering",
+        text: "Allocate the term to the correct definition.",
+        stem: "A construction feasibility report …",
+        options: [
+          "… is drafted to provide a detailed overview of material costs, work hours, and labor costs.",
+          "… is drafted before the foundations of the proposed project are dug and covers required software, technology, and a detailed costing system.",
+          "… is drafted before the initial stages of the proposed project and covers required resources, technology, schedule, and environmental issues.",
+          "… is drafted before handover of the finished project and covers required maintenance, operating costs, and life cycle analysis."
+        ],
+        correctIndex: 2,
+        explanation: "Die Machbarkeitsstudie klärt vor Projektstart Ressourcen, Technik, Zeitplan und Umweltfragen."
+      },
+      {
+        id: 13,
+        category: "Civil engineering vocabulary",
+        text: "Read the definition and choose the correct term.",
+        stem: "The stretch between two supports on a bridge.",
+        options: ["span","main","suspension","arch"],
+        correctIndex: 0,
+        explanation: "Der Abstand zwischen zwei Auflagern heißt „span“ (Spannweite)."
+      },
+      {
+        id: 14,
+        category: "Narrative tenses",
+        text: "Complete the sentence correctly.",
+        stem: "Once the subcontractor had finished their work, the project manager ______ the completed tasks.",
+        options: ["reviewed","had been reviewing","has reviewed","was reviewing"],
+        correctIndex: 0,
+        explanation: "Nach „once + past perfect“ folgt hier simple past: „reviewed“."
+      },
+      {
+        id: 15,
+        category: "Describing trends",
+        text: "Answer the question correctly.",
+        stem: "Which word describes a quick and upward movement, often associated with speed?",
+        options: ["jump","dive","rocket","plummet"],
+        correctIndex: 2,
+        explanation: "„to rocket“ beschreibt ein schnelles starkes Ansteigen."
+      },
+      {
+        id: 16,
+        category: "Civil engineering vocabulary",
+        text: "Complete the sentence with the correct term.",
+        stem: "Torsion describes a ______ force.",
+        options: ["twisting","stretching","bending","squashing"],
+        correctIndex: 0,
+        explanation: "Torsion ist eine Verdrehung, also eine „twisting force“."
+      },
+      {
+        id: 17,
+        category: "Conditionals",
+        text: "Complete the sentence correctly.",
+        stem: "If the concrete mixer breaks down today, it ______",
+        options: [
+          "would have been repaired yesterday.",
+          "will be repaired immediately.",
+          "should be repaired yesterday.",
+          "would have been repaired tomorrow."
+        ],
+        correctIndex: 1,
+        explanation: "Gegenwart + reale Folge: if + present simple → will + infinitive."
+      },
+      {
+        id: 18,
+        category: "Conditionals",
+        text: "Complete the sentence correctly.",
+        stem: "If the construction materials were cheaper, builders ______",
+        options: [
+          "will have more profit.",
+          "have more profit.",
+          "would have more profit.",
+          "have had more profit."
+        ],
+        correctIndex: 2,
+        explanation: "Irreale Gegenwart: if + past simple → would + infinitive."
+      },
+      {
+        id: 19,
+        category: "Skyscrapers",
+        text: "Choose the correct answer.",
+        stem: "In the 1950s, skyscraper construction turned to lightweight buildings made of glass and steel, as exemplified by Mies van der Rohe's Seagram building in New York. What name was given to this type of construction?",
+        options: ["Post-modernist","Art Nouveau","International style","Boxy glassy"],
+        correctIndex: 2,
+        explanation: "Das Seagram Building ist ein typisches Beispiel des „International Style“."
+      },
+      {
+        id: 20,
+        category: "Civil engineering vocabulary",
+        text: "Complete the sentence with the correct term.",
+        stem: "The steel beams and concrete ______ were carefully installed to create a strong and stable superstructure.",
+        options: ["footing","plinth","lintel","columns"],
+        correctIndex: 3,
+        explanation: "Stützen aus Stahlbeton heißen „columns“."
+      },
+      {
+        id: 21,
+        category: "Civil engineering vocabulary",
+        text: "Complete the sentence with the correct term.",
+        stem: "______ such as wind or seismic forces can exert significant pressure on the building's exterior, requiring robust structural elements to resist them.",
+        options: ["compression","gravity","lateral loads","tension"],
+        correctIndex: 2,
+        explanation: "Wind- und Erdbebenkräfte wirken seitlich und heißen „lateral loads“."
+      },
+      {
+        id: 22,
+        category: "Civil engineering",
+        text: "Allocate the term to the correct definition.",
+        stem: "To commission a project means …",
+        options: [
+          "to order a plan to be carried out",
+          "to finalize the project report to document the achievement of a milestone",
+          "to employ the construction team for a project",
+          "to determine the end of a construction project"
+        ],
+        correctIndex: 0,
+        explanation: "„To commission“ bedeutet, einen Auftrag bzw. die Durchführung zu veranlassen."
+      },
+      {
+        id: 23,
+        category: "Green building",
+        text: "Choose the correct answer.",
+        stem: "What is mycelium?",
+        options: [
+          "tightly compacted dirt in wooden forms",
+          "a paving system which allows the grass to grow between steel reinforced concrete",
+          "the root structure of fungi and mushrooms",
+          "uses recycled material including steel dust"
+        ],
+        correctIndex: 2,
+        explanation: "Mycelium ist das Wurzelgeflecht von Pilzen."
+      },
+      {
+        id: 24,
+        category: "Civil engineering",
+        text: "Allocate the term to the correct definition.",
+        stem: "A GANTT chart …",
+        options: [
+          "… is a visual timeline that displays project tasks and their durations helping in planning, scheduling, and tracking project progress.",
+          "… is a detailed cost breakdown of project tasks and expenditures, facilitating financial planning and budget management.",
+          "… is a graphical representation of weather conditions throughout a project, aiding in planning outdoor work and assessing potential delays.",
+          "… is a visual representation of the number of workers assigned to different project tasks, assisting in labor allocation and workforce management."
+        ],
+        correctIndex: 0,
+        explanation: "Ein GANTT-Chart zeigt Aufgaben als Zeitbalken und hilft beim Planen und Überwachen."
+      },
+      {
+        id: 25,
+        category: "Civil engineering vocabulary",
+        text: "Read the definition and choose the correct term.",
+        stem: "Place where one road goes over another.",
+        options: ["pedestrian crossing","footbridge","crossover","culvert"],
+        correctIndex: 2,
+        explanation: "Ein Überführungsbauwerk zwischen zwei Straßen heißt „crossover“."
+      },
+      {
+        id: 26,
+        category: "Civil engineering vocabulary",
+        text: "Complete the sentence with the correct term.",
+        stem: "The ______ of the building, including the skeletal framework of beams and columns, serves as the backbone of the entire structure.",
+        options: ["foundation","carcass","beams","footing"],
+        correctIndex: 1,
+        explanation: "Die Rohbau-Struktur eines Gebäudes wird als „carcass“ bezeichnet."
+      },
+      {
+        id: 27,
+        category: "Civil engineering vocabulary",
+        text: "Read the definition and choose the correct term.",
+        stem: "A hole in the surface of the road caused by traffic or bad weather.",
+        options: ["culvert","sewer","manhole","pothole"],
+        correctIndex: 3,
+        explanation: "Solche Schlaglöcher heißen „potholes“."
+      },
+      {
+        id: 28,
+        category: "Describing trends",
+        text: "Answer the question correctly.",
+        stem: "Which word describes a rapid downward movement or descent?",
+        options: ["dive","fluctuate","climb","hover"],
+        correctIndex: 0,
+        explanation: "„to dive“ beschreibt ein schnelles starkes Fallen."
+      },
+      {
+        id: 29,
+        category: "Civil engineering vocabulary",
+        text: "Read the definition and choose the correct term.",
+        stem: "The edge of a road where cars can stop in an emergency; grass may grow there.",
+        options: ["pedestrian crossing","footbridge","soft shoulder","hard shoulder"],
+        correctIndex: 2,
+        explanation: "Dieser Bereich heißt „soft shoulder“, im Gegensatz zur befestigten „hard shoulder“."
+      },
+      {
+        id: 30,
+        category: "Civil engineering vocabulary",
+        text: "Read the definition and choose the correct term.",
+        stem: "Area where pedestrians can walk.",
+        options: ["camber","pavement","crossover","main"],
+        correctIndex: 1,
+        explanation: "Der Gehweg heißt im britischen Englisch „pavement“."
+      },
+      {
+        id: 31,
+        category: "Green building",
+        text: "Choose the correct answer.",
+        stem: "What is ashcrete?",
+        options: [
+          "uses fly ash instead of traditional cement",
+          "root structure of fungi and mushrooms",
+          "tightly compacted dirt in wooden forms",
+          "a paving system which allows the grass to grow between steel reinforced concrete"
+        ],
+        correctIndex: 0,
+        explanation: "Ashcrete ersetzt Zement teilweise durch Flugasche."
+      },
+      {
+        id: 32,
+        category: "Find the odd one out",
+        text: "Which answer has a different meaning than the others?",
+        stem: "During the recession, the construction industry experienced a slow deterioration, with many projects being put on hold or canceled.",
+        options: [
+          "During the recession, the construction industry fell steadily, with many projects being put on hold or canceled.",
+          "During the recession, the construction industry experienced a steady decrease, with many projects being put on hold or canceled.",
+          "During the recession, the construction industry experienced a sudden drop, with many projects being put on hold or canceled.",
+          "During the recession, the construction industry went down gradually, with many projects being put on hold or canceled."
+        ],
+        correctIndex: 2,
+        explanation: "Nur „sudden drop“ beschreibt einen plötzlichen Einbruch, nicht eine langsame Verschlechterung."
+      },
+      {
+        id: 33,
+        category: "Civil engineering",
+        text: "Allocate the term to the correct definition.",
+        stem: "A tender …",
+        options: [
+          "… is a proposal that the client submits to the contractor to confirm acceptance of their costing system.",
+          "… is the preliminary design proposal for a building issued by an architect.",
+          "… is a proposal that a contractor submits to the client to conduct or manage a particular construction project.",
+          "… is the proposal to construct a building complete and ready to operate."
+        ],
+        correctIndex: 2,
+        explanation: "Im Bauwesen ist die Ausschreibung bzw. das Angebot des Auftragnehmers ein „tender“."
+      },
+      {
+        id: 34,
+        category: "Skyscrapers",
+        text: "Choose the correct answer.",
+        stem: "What problems were caused by the large number of high-rise buildings in Chicago's Loop in the late 19th century?",
+        options: [
+          "A lack of light in the streets.",
+          "People getting vertigo.",
+          "Too many vacant properties.",
+          "A lack of transport options."
+        ],
+        correctIndex: 0,
+        explanation: "Die hohen Gebäude verschatteten die Straßen, sodass wenig Licht durchkam."
+      },
+      {
+        id: 35,
+        category: "Civil engineering vocabulary",
+        text: "Read the definition and choose the correct term.",
+        stem: "A curved structure under a bridge or on a ceiling.",
+        options: ["span","main","suspender","arch"],
+        correctIndex: 3,
+        explanation: "Eine gekrümmte Tragform ist ein „arch“ (Bogen)."
+      },
+      {
+        id: 36,
+        category: "Find the odd one out",
+        text: "Which answer has a different meaning than the others?",
+        stem: "As renewable energy gains prominence, the installation of solar panels has soared within the construction sector.",
+        options: [
+          "… has soared within the construction sector.",
+          "… has skyrocketed within the construction sector.",
+          "… has spiked within the construction sector.",
+          "… has slumped within the construction sector."
+        ],
+        correctIndex: 3,
+        explanation: "„Slumped“ bedeutet stark gefallen; die anderen Verben meinen starkes Wachstum."
+      },
+      {
+        id: 37,
+        category: "Skyscrapers",
+        text: "Choose the correct answer.",
+        stem: "Which of the following techniques were not used to reduce the swaying of modern skyscrapers such as the Citicorp Center?",
+        options: [
+          "They moved the columns to the perimeter.",
+          "They used tuned mass dampers.",
+          "They used a glass and aluminium skin."
+        ],
+        correctIndex: 2,
+        explanation: "Die Glas- und Aluminiumfassade ist vor allem Gebäudehülle und Gestaltung, keine gezielte Maßnahme zur Reduzierung des Schwankens; die anderen beiden Techniken dienen genau dazu."
+      },
+      {
+        id: 38,
+        category: "Narrative tenses",
+        text: "Complete the sentence correctly.",
+        stem: "The architect and project manager ______ the integration of innovative construction methods to enhance the project's efficiency, a decision that will impact the construction process.",
+        options: ["were discussing","have been discussing","discussed","had recently been discussing"],
+        correctIndex: 2,
+        explanation: "Die Entscheidung ist abgeschlossen, daher simple past: „they discussed …“."
+      },
+      {
+        id: 39,
+        category: "Civil engineering vocabulary",
+        text: "Complete the sentence with the correct term.",
+        stem: "Load is a ______ quantity since it has magnitude and a direction.",
+        options: ["vector","scalar","compression","proportional"],
+        correctIndex: 0,
+        explanation: "Kräfte und Lasten haben Betrag und Richtung – sie sind Vektoren."
+      },
+      {
+        id: 40,
+        category: "Civil engineering vocabulary",
+        text: "Read the definition and choose the correct term.",
+        stem: "A structure which carries a road or railway across water.",
+        options: ["crossover","tunnel","aqueduct","viaduct"],
+        correctIndex: 3,
+        explanation: "Ein Viadukt trägt eine Straße oder Bahn über ein Tal oder Gewässer."
+      },
+      {
+        id: 41,
+        category: "Green building",
+        text: "Choose the correct answer.",
+        stem: "What does SDG stand for?",
+        options: [
+          "Strong Driven Goal",
+          "Sustainable Development Goal",
+          "Sanitation Decent Green",
+          "Sunny Day Green"
+        ],
+        correctIndex: 1,
+        explanation: "SDG steht für „Sustainable Development Goal“."
+      },
+      {
+        id: 42,
+        category: "Describing trends",
+        text: "Answer the question correctly.",
+        stem: "What is the opposite of the verb rocket?",
+        options: [
+          "fall slowly",
+          "edge up",
+          "plummet",
+          "descend slightly"
+        ],
+        correctIndex: 2,
+        explanation: "Im Business-English gelten „rocket“ (stark steigen) und „plummet“ (stark fallen) als Gegensätze."
+      },
+      {
+        id: 43,
+        category: "Narrative tenses",
+        text: "Complete the sentence correctly.",
+        stem: "The construction feasibility study report was completed ______, providing valuable insights for the project.",
+        options: ["for 2021","since 2021","in 2021","in the next six months"],
+        correctIndex: 2,
+        explanation: "Für einen abgeschlossenen Zeitpunkt verwenden wir „in 2021“."
+      },
+      {
+        id: 44,
+        category: "Conditionals",
+        text: "Complete the sentence correctly.",
+        stem: "The building's design includes innovative materials; thus, if a fire ______, it will resist combustion.",
+        options: [
+          "is raging",
+          "rages",
+          "raged",
+          "would rage"
+        ],
+        correctIndex: 0,
+        explanation: "Reale Gegenwart: if + present continuous („is raging“) → will + infinitive."
+      },
+      {
+        id: 45,
+        category: "Describing trends",
+        text: "Answer the question correctly.",
+        stem: "What does the verb rocket mean in the context of trends?",
+        options: [
+          "fluctuate",
+          "descend steadily",
+          "climb rapidly",
+          "rise gradually"
+        ],
+        correctIndex: 2,
+        explanation: "„to rocket“ bedeutet sehr schnell und stark ansteigen."
+      },
+      {
+        id: 46,
+        category: "Describing trends",
+        text: "Answer the question correctly.",
+        stem: "What does the verb jump mean in the context of trends?",
+        options: [
+          "fall suddenly",
+          "increase dramatically",
+          "climb steadily",
+          "stay the same"
+        ],
+        correctIndex: 1,
+        explanation: "„to jump“ beschreibt einen plötzlichen deutlichen Anstieg."
+      },
+      {
+        id: 47,
+        category: "Conditionals",
+        text: "Complete the sentence correctly.",
+        stem: "The construction crew adhered to safety protocols; as a result, if an accident ______, it would have been minor.",
+        options: [
+          "happened",
+          "had happened",
+          "has happened",
+          "will happen"
+        ],
+        correctIndex: 1,
+        explanation: "Irreale Bedingung in der Vergangenheit: if + past perfect („had happened“) → would have + past participle."
+      },
+      {
+        id: 48,
+        category: "Narrative tenses",
+        text: "Complete the sentence correctly.",
+        stem: "The team ______ to maintain the project's aesthetic appeal, and they are currently reviewing its progress.",
+        options: [
+          "has been diligently working",
+          "were diligently working",
+          "had been diligently working",
+          "will be diligently working"
+        ],
+        correctIndex: 0,
+        explanation: "Die Handlung begann in der Vergangenheit und dauert bis jetzt an: present perfect continuous."
+      },
+      {
+        id: 49,
+        category: "Narrative tenses",
+        text: "Complete the sentence correctly.",
+        stem: "The contractor ______ diligently this morning to meet the project's deadlines.",
+        options: [
+          "has been working",
+          "had worked",
+          "had been working",
+          "will have worked"
+        ],
+        correctIndex: 0,
+        explanation: "„This morning“ verbindet Vergangenheit mit Gegenwart → present perfect continuous passt gut."
+      },
+      {
+        id: 50,
+        category: "Civil engineering",
+        text: "Allocate the term to the correct definition.",
+        stem: "A turnkey project …",
+        options: [
+          "… means the contractor only provides the initial design and then hands over all responsibilities to the client.",
+          "… involves a joint effort between the client and the contractor, with both parties sharing equal responsibility for design, construction, and management.",
+          "… is a type of project in which a contractor is responsible for the entire project, taking care of all aspects, ensuring that the project is ready for immediate use or occupancy.",
+          "… is a type of project in which the contractor takes complete control of the project but does not deliver the final product."
+        ],
+        correctIndex: 2,
+        explanation: "Bei einem Turnkey-Projekt übergibt der Auftragnehmer das fertige, bezugsfertige Objekt."
+      },
+      {
+        id: 51,
+        category: "Narrative tenses",
+        text: "Complete the sentence correctly.",
+        stem: "We are proud to announce that the project ______ a significant milestone, marking a crucial step toward completion in the near future.",
+        options: [
+          "was already achieving",
+          "has already achieved",
+          "was already achieved",
+          "had already achieved"
+        ],
+        correctIndex: 1,
+        explanation: "Aktuelles Ergebnis mit Bezug zur Gegenwart: present perfect („has already achieved“)."
+      },
+      {
+        id: 52,
+        category: "Skyscrapers",
+        text: "Choose the correct answer.",
+        stem: "Which one of these statements about Manhattan and Chicago's Loop in the 1930s is true?",
+        options: [
+          "There were no height restrictions on buildings in either place.",
+          "They were both surrounded by water or other obstacles.",
+          "The first buildings with steel skeletons were finished in both cities on the same day.",
+          "Chicago already had a building taller than the Empire State Building when it was completed."
+        ],
+        correctIndex: 1,
+        explanation: "Beide Geschäftsviertel waren von Wasser oder anderen Barrieren umgeben."
+      },
+      {
+        id: 53,
+        category: "Describing trends",
+        text: "Answer the question correctly.",
+        stem: "What is the opposite of the verb dive in the context of trends?",
+        options: ["edge up","soar","plummet","level off"],
+        correctIndex: 1,
+        explanation: "„to dive“ = stark fallen; der direkte Gegenpol ist „to soar“ = stark steigen."
+      },
+      {
+        id: 54,
+        category: "Civil engineering vocabulary",
+        text: "Read the definition and choose the correct term.",
+        stem: "An underground structure to carry off waste and surface water.",
+        options: ["irrigation","culvert","drainage","sewer"],
+        correctIndex: 3,
+        explanation: "Ein Abwasserkanal heißt „sewer“."
+      },
+      {
+        id: 55,
+        category: "Describing trends",
+        text: "Answer the question correctly.",
+        stem: "What is the opposite of the verb recover in the context of trends?",
+        options: ["grow","improve","fall","get worse"],
+        correctIndex: 3,
+        explanation: "„to recover“ = sich erholen; das Gegenteil ist „to get worse“."
+      },
+      {
+        id: 56,
+        category: "Civil engineering vocabulary",
+        text: "Read the definition and choose the correct term.",
+        stem: "A bridge that has its roadway hanging from two or more cables.",
+        options: ["swing bridge","bascule bridge","suspender bridge","suspension bridge"],
+        correctIndex: 3,
+        explanation: "Eine Hängebrücke heißt „suspension bridge“."
+      },
+      {
+        id: 57,
+        category: "Green building",
+        text: "Choose the correct answer.",
+        stem: "What is rammed earth?",
+        options: [
+          "uses a by-product of steel dust",
+          "root structure of fungi and mushrooms",
+          "tightly compacted dirt in wooden forms",
+          "woody inner fibers of the hemp plant"
+        ],
+        correctIndex: 2,
+        explanation: "Rammed earth entsteht durch Verdichten von Erde in Schalungen."
+      },
+      {
+        id: 58,
+        category: "Green building",
+        text: "Choose the correct answer.",
+        stem: "What is grasscrete?",
+        options: [
+          "woody inner fibers of the hemp plant",
+          "tightly compacted dirt in wooden forms",
+          "root structure of fungi and mushrooms",
+          "a paving system that allows the grass to grow between steel reinforced concrete"
+        ],
+        correctIndex: 3,
+        explanation: "Grasscrete ist ein Rasengitter-System aus Beton mit Graszwischenräumen."
+      },
+      {
+        id: 59,
+        category: "Conditionals",
+        text: "Complete the sentence correctly.",
+        stem: "If the city had invested in better drainage systems, the flood ______",
+        options: [
+          "would occur every year.",
+          "will happen in the future.",
+          "would have been prevented.",
+          "was prevented last year."
+        ],
+        correctIndex: 2,
+        explanation: "Vergangene, nicht erfüllte Bedingung: if + past perfect → would have + past participle."
+      },
+      {
+        id: 60,
+        category: "Green building",
+        text: "Choose the correct answer.",
+        stem: "What is ferrock?",
+        options: [
+          "tightly compacted dirt in wooden forms",
+          "root structure of fungi and mushrooms",
+          "uses recycled material including steel dust",
+          "a paving system which allows the grass to grow between steel reinforced concrete"
+        ],
+        correctIndex: 2,
+        explanation: "Ferrock ist ein Beton-Ersatzstoff auf Basis von recyceltem Stahlstaub."
+      },
+      {
+        id: 61,
+        category: "Find the odd one out",
+        text: "Which answer has a different meaning than the others?",
+        stem: "Due to economic uncertainties, new housing starts have decreased sharply in certain regions, impacting the construction industry.",
+        options: [
+          "… have dropped in certain regions, impacting the construction industry.",
+          "… have deteriorated slowly in certain regions, impacting the construction industry.",
+          "… have plummeted in certain regions, impacting the construction industry.",
+          "… have hit a low in certain regions, impacting the construction industry."
+        ],
+        correctIndex: 1,
+        explanation: "Alle anderen Formulierungen beschreiben einen starken oder bereits sehr niedrigen Stand; nur „deteriorated slowly“ ist langsam."
+      },
+      {
+        id: 62,
+        category: "Conditionals",
+        text: "Complete the sentence correctly.",
+        stem: "The bridge's foundations are sturdy; therefore, if an earthquake ______, it will withstand the tremors.",
+        options: [
+          "shakes the ground",
+          "would shake the ground",
+          "had shaken the ground",
+          "will shake the ground"
+        ],
+        correctIndex: 0,
+        explanation: "Reale Zukunftsbedingung: if + present simple („shakes“) → will + infinitive."
+      },
+      {
+        id: 63,
+        category: "Civil engineering vocabulary",
+        text: "Complete the sentence with the correct term.",
+        stem: "The ______, including the foundation and underground utilities, must be carefully planned and executed before starting the framing process.",
+        options: ["building envelope","superstructure","load-bearing walls","substructure"],
+        correctIndex: 3,
+        explanation: "Fundamente und Leitungen gehören zur „substructure“ (Unterbau)."
+      },
+      {
+        id: 64,
+        category: "Conditionals",
+        text: "Complete the sentence correctly.",
+        stem: "Any leak in the dam will be repaired swiftly if ______",
+        options: [
+          "maintenance would be consistent.",
+          "maintenance is consistent.",
+          "maintenance were consistent.",
+          "maintenance will be consistent."
+        ],
+        correctIndex: 1,
+        explanation: "Auch hier reelle Bedingung: if + present simple („is consistent“) → will + infinitive."
+      },
+      {
+        id: 65,
+        category: "Green building",
+        text: "Choose the correct answer.",
+        stem: "What is the benefit of the Passivhaus Standard?",
+        options: [
+          "All of the above.",
+          "It uses very little energy for heating and cooling.",
+          "It is optimized for a decarbonised grid.",
+          "It is augmented for occupant health and wellbeing."
+        ],
+        correctIndex: 0,
+        explanation: "Alle genannten Punkte sind Ziele des Passivhaus-Standards, daher „All of the above“."
+      },
+      {
+        id: 66,
+        category: "Skyscrapers",
+        text: "Choose the correct answer.",
+        stem: "San Gimignano: What was not a benefit of the towers?",
+        options: [
+          "They had big windows.",
+          "They had big thick walls.",
+          "They could hold a lot of weight.",
+          "The inhabitants could see their enemies approaching from above."
+        ],
+        correctIndex: 0,
+        explanation: "Große Fenster waren kein Vorteil der wehrhaften Türme; sie hatten eher wenige Öffnungen."
+      },
+      {
+        id: 67,
+        category: "Skyscrapers",
+        text: "Choose the correct answer.",
+        stem: "The skyscraper race of the late 1920s was between which two companies' buildings?",
+        options: [
+          "Woolworth and Chrysler",
+          "Chrysler and Bank of Manhattan",
+          "Bank of Manhattan and Woolworth",
+          "Woolworth and Empire State"
+        ],
+        correctIndex: 1,
+        explanation: "Das Wettrennen um den höchsten Turm fand zwischen dem Chrysler Building und dem Bank-of-Manhattan-Gebäude statt."
+      },
+      {
+        id: 68,
+        category: "Civil engineering",
+        text: "Allocate the term to the correct definition.",
+        stem: "Forensic engineering …",
+        options: [
+          "… is the investigation of materials, products, structures, or components that fail or do not operate or function as intended, causing personal injury or damage to property.",
+          "… involves the design and maintenance of structures to perform at earthquake exposure up to the expectations and in compliance with building codes.",
+          "… is the investigation of structural components of public structures, such as statues, to ensure stability and proper functionality.",
+          "… involves planning and execution of the designs from transportation, site development, hydraulic, environmental, structural and geotechnical engineers."
+        ],
+        correctIndex: 0,
+        explanation: "Forensische Ingenieurwissenschaft analysiert Schadensfälle und Versagen von Bauwerken und Produkten."
+      },
+      {
+        id: 69,
+        category: "Conditionals",
+        text: "Complete the sentence correctly.",
+        stem: "The road is under construction; consequently, if heavy rain ______, it will delay the project.",
+        options: [
+          "would fall, it would delay the project.",
+          "fell, it would have delayed the project.",
+          "falls, it will delay the project.",
+          "will fall, it delays the project."
+        ],
+        correctIndex: 2,
+        explanation: "Reale Möglichkeit in der Zukunft: if + present simple („falls“) → will + infinitive."
+      },
+      {
+        id: 70,
+        category: "Civil engineering vocabulary",
+        text: "Read the definition and choose the correct term.",
+        stem: "A bridge that moves through 90 degrees to open and allow boats to pass along the river.",
+        options: ["bascule bridge","suspension bridge","lift bridge","swing bridge"],
+        correctIndex: 3,
+        explanation: "Eine drehbare Brücke um etwa 90° heißt „swing bridge“."
+      },
+      {
+        id: 71,
+        category: "Civil engineering vocabulary",
+        text: "Complete the sentence with the correct term.",
+        stem: "Strain is the measurement of an object's ______ compared with its dimensions before the stress was applied.",
+        options: ["pressure","extension","magnitude","load"],
+        correctIndex: 1,
+        explanation: "Strain beschreibt die Dehnung, also die Längenänderung im Verhältnis zur ursprünglichen Länge."
+      },
+      {
+        id: 72,
+        category: "Green building",
+        text: "Choose the correct answer.",
+        stem: "How many SDGs are there?",
+        options: ["20","17","12","10"],
+        correctIndex: 1,
+        explanation: "Die Vereinten Nationen haben 17 Sustainable Development Goals definiert."
+      },
+      {
+        id: 73,
+        category: "Conditionals",
+        text: "Complete the sentence correctly.",
+        stem: "If the construction crew had followed the safety regulations, the accident ______",
+        options: [
+          "wouldn't have happened",
+          "would have happened",
+          "will not have happened",
+          "didn't happen"
+        ],
+        correctIndex: 0,
+        explanation: "Vergangenes, vermeidbares Ereignis → 3rd Conditional: „wouldn't have happened“."
+      },
+      {
+        id: 74,
+        category: "Civil engineering vocabulary",
+        text: "Read the definition and choose the correct term.",
+        stem: "Small, broken stones used to make the surface of the road.",
+        options: ["metal","pavement","tarmac","main"],
+        correctIndex: 0,
+        explanation: "In manchen Varianten des Englischen heißen solche Schottersteine „metal“."
+      },
+      {
+        id: 75,
+        category: "Skyscrapers",
+        text: "Choose the correct answer.",
+        stem: "San Gimignano: Why did they build so many towers?",
+        options: [
+          "Because of a feud between the families and the government.",
+          "Because of a feud between two families.",
+          "The people were fighting against outside invaders.",
+          "They were very creative and wanted to build something beautiful."
+        ],
+        correctIndex: 1,
+        explanation: "Die Türme entstanden aus einem Konkurrenzkampf rivalisierender Familien."
+      },
+      {
+        id: 76,
+        category: "Civil engineering vocabulary",
+        text: "Complete the sentence with the correct term.",
+        stem: "A load which is concentrated, i.e. acting on a small area, is called ______",
+        options: ["live load","dead load","static load","point load"],
+        correctIndex: 3,
+        explanation: "Eine konzentrierte Einzelkraft bezeichnet man als „point load“."
+      },
+      {
+        id: 77,
+        category: "Describing trends",
+        text: "Answer the question correctly.",
+        stem: "What does the word dip mean in the context of trends?",
+        options: [
+          "to fall slightly for a short time",
+          "to rise very sharply",
+          "to remain completely stable",
+          "to increase slowly"
+        ],
+        correctIndex: 0,
+        explanation: "„to dip“ beschreibt einen kleinen, meist vorübergehenden Rückgang."
+      },
+      {
+        id: 78,
+        category: "Describing trends",
+        text: "Answer the question correctly.",
+        stem: "What does the phrase hit a low point signify?",
+        options: [
+          "undergo rapid improvement",
+          "experience a substantial increase",
+          "maintain a consistently high position",
+          "reach the bottom or minimum level"
+        ],
+        correctIndex: 3,
+        explanation: "„to hit a low point“ bedeutet, den Tiefpunkt bzw. Mindestwert zu erreichen."
+      },
+      {
+        id: 79,
+        category: "Describing trends",
+        text: "Answer the question correctly.",
+        stem: "What does the verb dive mean in the context of trends?",
+        options: [
+          "fluctuate",
+          "fall steeply",
+          "jump joyfully",
+          "rise suddenly"
+        ],
+        correctIndex: 1,
+        explanation: "„to dive“ steht für ein starkes, schnelles Fallen."
+      },
+      {
+        id: 80,
+        category: "Narrative tenses",
+        text: "Complete the sentence correctly.",
+        stem: "Using the experiences they made during the last project as a basis, they ______ a more efficient scheduling process now.",
+        options: [
+          "had implemented",
+          "are implementing",
+          "were implementing",
+          "implemented"
+        ],
+        correctIndex: 1,
+        explanation: "Das Wort „now“ zeigt Gegenwart; daher verwenden wir present continuous: „are implementing“."
+      },
+      {
+        id: 81,
+        category: "Civil engineering vocabulary",
+        text: "Read the definition and choose the correct term.",
+        stem: "A vertical member supporting a roof or beam.",
+        options: ["girder", "column", "pier", "joist"],
+        correctIndex: 1,
+        explanation: "Eine senkrechte Stütze für Dach oder Träger heißt „column“ (Stütze/Säule)."
+      },
+      {
+        id: 82,
+        category: "Narrative tenses",
+        text: "Complete the sentence correctly.",
+        stem: "The project had been in the planning phase for months before the team ______ to incorporate an advanced costing system.",
+        options: ["had decided", "have decided", "has decided", "decided"],
+        correctIndex: 3,
+        explanation: "Nach „had been in the planning phase“ folgt simple past: „before the team decided …“."
+      },
+      {
+        id: 83,
+        category: "Make and do",
+        text: "Choose the correct answer.",
+        stem: "The rector ______ a valedictory speech at every graduation ceremony since 2004.",
+        options: ["has made", "makes", "does", "is making"],
+        correctIndex: 0,
+        explanation: "Mit „since 2004“ passt present perfect: „has made a valedictory speech“."
+      },
+      {
+        id: 84,
+        category: "Conditionals",
+        text: "Complete the sentence correctly.",
+        stem: "If a building's foundation is weak, it ______",
+        options: ["collapsed", "will have collapsed", "would collapse", "will collapse"],
+        correctIndex: 3,
+        explanation: "Reale Zukunftsfolge: if + present simple („is weak“) → „will collapse“."
+      },
+      {
+        id: 85,
+        category: "Skyscrapers",
+        text: "Choose the correct answer.",
+        stem: "The design of the Chrysler building's crown resembles which of the following?",
+        options: ["the spokes of a wheel", "a clock face", "footballs", "an eagle"],
+        correctIndex: 0,
+        explanation: "Die Krone erinnert an die Speichen einer Radkappe – „spokes of a wheel“."
+      },
+      {
+        id: 86,
+        category: "Make and do",
+        text: "Choose the correct answer.",
+        stem: "I've heard it all a hundred times before – stop ______ promises you can't keep!",
+        options: ["to make", "to do", "doing", "making"],
+        correctIndex: 3,
+        explanation: "Nach „stop“ folgt meist -ing und man „makes promises“ → „stop making promises“."
+      },
+      {
+        id: 87,
+        category: "Green building",
+        text: "Choose the correct answer.",
+        stem: "What is timber Crete?",
+        options: [
+          "root structure of fungi and mushrooms",
+          "a paving system which allows the grass to grow between steel reinforced concrete",
+          "made of sawdust and concrete mixed together",
+          "tightly compacted dirt in wooden forms"
+        ],
+        correctIndex: 2,
+        explanation: "Timbercrete besteht aus Sägemehl (timber) und Beton – also eine Mischung daraus."
+      },
+      {
+        id: 88,
+        category: "Civil engineering vocabulary",
+        text: "Read the definition and choose the correct term.",
+        stem: "A vertical panel within the superstructure.",
+        options: ["stud", "lintel", "wall", "pillar"],
+        correctIndex: 2,
+        explanation: "Eine vertikale Fläche im Gebäude ist eine „wall“ (Wand)."
+      },
+      {
+        id: 89,
+        category: "Civil engineering vocabulary",
+        text: "Read the definition and choose the correct term.",
+        stem: "A line of raised stones between the pavement and the road.",
+        options: ["crown", "curb", "camber", "culvert"],
+        correctIndex: 1,
+        explanation: "Der Bordstein zwischen Gehweg und Straße heißt „curb“."
+      },
+      {
+        id: 90,
+        category: "Civil engineering vocabulary",
+        text: "Complete the sentence with the correct term.",
+        stem: "Achieving precise ______ during the construction process is crucial to ensure that the walls and partitions fit together seamlessly.",
+        options: ["superstructure", "alignment", "gravity", "lateral load"],
+        correctIndex: 1,
+        explanation: "„Alignment“ bedeutet Ausrichtung – wichtig, damit alles genau zusammenpasst."
+      },
+      {
+        id: 91,
+        category: "Civil engineering",
+        text: "Allocate the term to the correct definition.",
+        stem: "Environmental engineering …",
+        options: [
+          "… primarily involves the design and maintenance of transportation systems.",
+          "… centers around the study and management of materials and structures, including soil and rock mechanics.",
+          "… encompasses waste treatment, water and air purification, and pollution control, addressing challenges like pollutant transport, waste management, and sustainable practices.",
+          "… primarily focuses on predicting and managing seismic activities."
+        ],
+        correctIndex: 2,
+        explanation: "Environmental Engineering beschäftigt sich mit Abfall, Wasser/Luftreinigung und Umweltschutz."
+      },
+      {
+        id: 92,
+        category: "Make and do",
+        text: "Choose the correct answer.",
+        stem: "Susan was very quiet in the meeting. She ______ any suggestions at all.",
+        options: ["didn't do", "wasn't making", "didn't make", "hadn't done"],
+        correctIndex: 2,
+        explanation: "Man „makes suggestions“ → past simple verneint: „didn't make any suggestions“."
+      },
+      {
+        id: 93,
+        category: "Civil engineering vocabulary",
+        text: "Read the definition and choose the correct term.",
+        stem: "The main beam, usually made out of metal/steel to make the frame of a bridge or large structure.",
+        options: ["joist", "girder", "stud", "cantilever"],
+        correctIndex: 1,
+        explanation: "Ein großer Hauptträger aus Stahl heißt „girder“."
+      },
+      {
+        id: 94,
+        category: "Narrative tenses",
+        text: "Complete the sentence correctly.",
+        stem: "By the time the tendering process ______, the architect had already finalized the blueprints.",
+        options: ["would start", "had started", "started", "has started"],
+        correctIndex: 2,
+        explanation: "Struktur: By the time X started, Y had already … → „started“ ist simple past."
+      },
+      {
+        id: 95,
+        category: "Civil engineering vocabulary",
+        text: "Complete the sentence with the correct term.",
+        stem: "_________ plays a crucial role in keeping the entire structure stable, as it ensures that the building's weight is directed downward.",
+        options: ["alignment", "a partition wall", "a staircase", "gravity"],
+        correctIndex: 3,
+        explanation: "Die Gewichtskraft wirkt nach unten – das ist „gravity“."
+      },
+      {
+        id: 96,
+        category: "Make and do",
+        text: "Choose the correct answer.",
+        stem: "Bai ______ the cleaning after the party.",
+        options: ["did", "has done", "have done", "made"],
+        correctIndex: 0,
+        explanation: "Man „does the cleaning“ → in der Vergangenheit: „did the cleaning“."
+      },
+      {
+        id: 97,
+        category: "Conditionals",
+        text: "Complete the sentence correctly.",
+        stem: "If engineers designed the bridge differently, it ______",
+        options: ["will be stronger", "would be stronger", "are stronger", "is stronger"],
+        correctIndex: 1,
+        explanation: "2nd Conditional: if + past simple („designed“) → „would be stronger“."
+      },
+      {
+        id: 98,
+        category: "Describing trends",
+        text: "Answer the question correctly.",
+        stem: "Which word describes a sudden, rapid, and steep descent?",
+        options: ["rocket", "jump", "decrease", "plummet"],
+        correctIndex: 3,
+        explanation: "„to plummet“ bedeutet stark und abrupt fallen."
+      },
+      {
+        id: 99,
+        category: "Civil engineering vocabulary",
+        text: "Allocate the term to the correct definition.",
+        stem: "A framework comprising several members in triangular units to span great distances.",
+        options: ["truss", "lintel", "girder", "cantilever"],
+        correctIndex: 0,
+        explanation: "Ein Fachwerk aus Dreiecken heißt „truss“."
+      },
+      {
+        id: 100,
+        category: "Make and do",
+        text: "Choose the correct answer.",
+        stem: "Sorry, Steve, but I need to hurry you. Can you please ______ a decision.",
+        options: ["to do", "to make", "do", "make"],
+        correctIndex: 3,
+        explanation: "Man „makes a decision“ → Imperativ: „make a decision“."
+      },
+      {
+        id: 101,
+        category: "Skyscrapers",
+        text: "Choose the correct answer.",
+        stem: "Which of the following tactics did not help the construction of the Empire State Building to be finished on time?",
+        options: [
+          "Structural elements were prefabricated off-site.",
+          "Tracks were laid on the floors.",
+          "Cafeterias were placed every five levels.",
+          "Sandstone was used instead of limestone."
+        ],
+        correctIndex: 3,
+        explanation: "Es wurde kein Sandstein statt Kalkstein verwendet – das ist die falsche Aussage."
+      },
+      {
+        id: 102,
+        category: "Find the odd one out",
+        text: "Which answer has a different meaning than the others?",
+        stem: "Over the past year, construction costs have fluctuated, making it challenging for builders to estimate project budgets accurately.",
+        options: [
+          "… have been unstable, making it challenging …",
+          "… have been subject to frequent changes, making it challenging …",
+          "… have edged down, making it challenging …",
+          "… have been volatile, making it challenging …"
+        ],
+        correctIndex: 2,
+        explanation: "„Edged down“ heißt leicht gesunken; die anderen bedeuten starkes Schwanken."
+      },
+      {
+        id: 103,
+        category: "Describing trends",
+        text: "Answer the question correctly.",
+        stem: "Which word describes a sudden, sharp decline?",
+        options: ["edge down", "rocket", "slump", "jump"],
+        correctIndex: 2,
+        explanation: "„to slump“ beschreibt einen plötzlichen deutlichen Einbruch."
+      },
+      {
+        id: 104,
+        category: "Civil engineering",
+        text: "Allocate the term to the correct definition.",
+        stem: "A site investigation …",
+        options: [
+          "… is carried out by management to oversee construction progress.",
+          "… is the study of the proposed location to assess the geology of the area.",
+          "… is an extensive investigation to evaluate the load-bearing qualities and stability of the ground.",
+          "… comprises activities carried out after the project to ensure problems are solved."
+        ],
+        correctIndex: 2,
+        explanation: "Die Baugrunderkundung bewertet Tragfähigkeit und Stabilität des Untergrundes."
+      },
+      {
+        id: 105,
+        category: "Narrative tenses",
+        text: "Complete the sentence correctly.",
+        stem: "By the time the project ______ its milestone, the team had already encountered numerous unexpected delays.",
+        options: ["has been reaching", "was reaching", "had reached", "reached"],
+        correctIndex: 3,
+        explanation: "Typisch: By the time X reached …, Y had already … → „reached“ im simple past."
+      },
+      {
+        id: 106,
+        category: "Civil engineering",
+        text: "Allocate the term to the correct definition.",
+        stem: "A feasibility study …",
+        options: [
+          "… determines whether a project can be realized considering factors such as aesthetic appeal, ecology, and maintenance.",
+          "… involves the detailed reporting of monthly construction progress to various levels of management.",
+          "… is a complex process resulting in detailed blueprints for all professions involved in the construction of a building.",
+          "… is a selection process to determine the most economical contractor for the respective project."
+        ],
+        correctIndex: 0,
+        explanation: "Die Machbarkeitsstudie prüft, ob ein Projekt grundsätzlich sinnvoll umsetzbar ist."
+      },
+      {
+        id: 107,
+        category: "Skyscrapers",
+        text: "Choose the correct answer.",
+        stem: "What name is given to the external arched stone framework of a Gothic church?",
+        options: ["pier", "flying buttress", "carcass", "nave"],
+        correctIndex: 1,
+        explanation: "Die außenliegenden Strebebögen heißen „flying buttresses“."
+      },
+      {
+        id: 108,
+        category: "Make and do",
+        text: "Choose the correct answer.",
+        stem: "The previous Prime Minister ______ terrible damage to the country.",
+        options: ["did", "has done", "has made", "made"],
+        correctIndex: 1,
+        explanation: "Man „does damage“ und present perfect („has done“) betont die Auswirkung bis heute."
+      },
+      {
+        id: 109,
+        category: "Civil engineering",
+        text: "Allocate the term to the correct definition.",
+        stem: "Structural engineering …",
+        options: [
+          "… involves measuring the earth’s surface using equipment like levels, theodolites, and GPS.",
+          "… is the field responsible for designing and maintaining transportation systems.",
+          "… involves designing and analyzing buildings and various structures to withstand loads, such as self-weight and environmental forces.",
+          "… focuses on the study and management of geological materials and structures, including soil and rock mechanics."
+        ],
+        correctIndex: 2,
+        explanation: "Structural Engineering plant und berechnet Tragwerke, damit sie Lasten sicher aufnehmen."
+      },
+      {
+        id: 110,
+        category: "Civil engineering vocabulary",
+        text: "Read the definition and choose the correct term.",
+        stem: "The rise in the center of a road which helps the water to flow off.",
+        options: ["culvert", "camber", "curb", "crown"],
+        correctIndex: 3,
+        explanation: "Der höchste Punkt der Fahrbahnmitte heißt „crown“."
+      },
+      {
+        id: 111,
+        category: "Find the odd one out",
+        text: "Which answer has a different meaning than the others?",
+        stem: "The use of 3D printing in construction is expected to grow substantially in the coming decade, revolutionizing the industry.",
+        options: [
+          "… is expected to rocket in the coming decade …",
+          "… is expected to increase dramatically in the coming decade …",
+          "… is expected to jump in the coming decade …",
+          "… is expected to edge up in the coming decade …"
+        ],
+        correctIndex: 3,
+        explanation: "„edge up“ bedeutet nur leicht steigen; die anderen beschreiben starkes Wachstum."
+      },
+      {
+        id: 112,
+        category: "Make and do",
+        text: "Choose the correct answer.",
+        stem: "Dave always ______ his homework very late at night.",
+        options: ["has done", "make", "does", "makes"],
+        correctIndex: 2,
+        explanation: "Man „does homework“; mit „always“ verwenden wir simple present: „does his homework“."
+      }
+    ];
+
+    // =========================
+    //  STATE + MODI
+    // =========================
+    const MASTERY_THRESHOLD = 3;
+    const MASTERY_KEY = "construction_quiz_mastery_v1";
+
+    let currentMode = null;       // "normal" | "shuffle" | "smart"
+    let questionOrder = [];       // Array von Frage-Indizes
+    let currentPos = 0;           // Position im questionOrder
+    let totalAnswered = 0;
+    let totalCorrect = 0;
+    let hasCheckedCurrent = false;
+    let mastery = {};
+
+    const modeLabels = {
+      normal: "Normal mode",
+      shuffle: "Shuffle mode",
+      smart: "Smart learning mode"
+    };
+
+    function loadMastery() {
+      try {
+        const raw = localStorage.getItem(MASTERY_KEY);
+        if (!raw) return {};
+        const parsed = JSON.parse(raw);
+        return parsed && typeof parsed === "object" ? parsed : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveMastery() {
+      try {
+        localStorage.setItem(MASTERY_KEY, JSON.stringify(mastery));
+      } catch {
+        // egal, wenn localStorage nicht geht
+      }
+    }
+
+    function shuffle(array) {
+      const arr = array.slice();
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function getActiveQuestionIndex() {
+      return questionOrder[currentPos];
+    }
+
+    function updateMeta() {
+      const meta = document.getElementById("quiz-meta");
+      if (!currentMode) {
+        meta.textContent = "";
+        return;
+      }
+      const label = modeLabels[currentMode] || "";
+      const total = questionOrder.length;
+      const pos = total > 0 ? currentPos + 1 : 0;
+      meta.textContent = total
+        ? `Modus: ${label} · Frage ${pos} von ${total}`
+        : `Modus: ${label} · keine Fragen verfügbar`;
+    }
+
+    function updateTagline() {
+      const tag = document.getElementById("tagline-label");
+      if (!currentMode) {
+        tag.textContent = "Construction English · Quiz";
+        return;
+      }
+      tag.textContent = `Construction English · ${modeLabels[currentMode]}`;
+    }
+
+    function updateScoreBanner() {
+      const scoreDiv = document.getElementById("score");
+      if (totalAnswered === 0) {
+        scoreDiv.innerHTML = "";
+        return;
+      }
+      const percent = Math.round((totalCorrect / totalAnswered) * 100);
+      scoreDiv.innerHTML = `
+        <div class="score-banner">
+          Bisher richtig: <strong>${totalCorrect}</strong> von <strong>${totalAnswered}</strong> (${percent}%)
+        </div>
+      `;
+    }
+
+    function renderCurrentQuestion() {
+      const container = document.getElementById("questions-container");
+      container.innerHTML = "";
+
+      if (!questionOrder.length) {
+        container.innerHTML = `<p class="empty-message">
+          Im aktuellen Modus gibt es gerade keine Fragen. Wechsle den Modus oder lösche die Lernstatistik im Browser.
+        </p>`;
+        return;
+      }
+
+      const globalIndex = getActiveQuestionIndex();
+      const q = questions[globalIndex];
+
+      const card = document.createElement("article");
+      card.className = "question-card";
+      card.dataset.globalIndex = String(globalIndex);
+
+      const header = document.createElement("div");
+      header.className = "question-header";
+
+      const title = document.createElement("div");
+      title.className = "question-title";
+      title.textContent = q.category || "Question";
+
+      const indexLabel = document.createElement("div");
+      indexLabel.className = "question-index";
+      // globale Nummer anzeigen:
+      const questionNumber = globalIndex + 1;
+      indexLabel.textContent = `Frage ${questionNumber}`;
+
+      header.appendChild(title);
+      header.appendChild(indexLabel);
+
+      const text = document.createElement("div");
+      text.className = "question-text";
+      text.textContent = q.text;
+
+      card.appendChild(header);
+      card.appendChild(text);
+
+      if (q.stem) {
+        const stem = document.createElement("div");
+        stem.className = "question-subtext";
+        stem.textContent = q.stem;
+        card.appendChild(stem);
+      }
+
+      const optionsWrapper = document.createElement("div");
+      optionsWrapper.className = "options";
+
+      q.options.forEach((optText, optIndex) => {
+        const optionId = `q${globalIndex}-opt${optIndex}`;
+
+        const label = document.createElement("label");
+        label.className = "option";
+
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = `q-${globalIndex}`;
+        input.value = String(optIndex);
+        input.id = optionId;
+
+        const span = document.createElement("div");
+        span.className = "option-label";
+        span.textContent = optText;
+
+        label.appendChild(input);
+        label.appendChild(span);
+        optionsWrapper.appendChild(label);
+      });
+
+      const explanation = document.createElement("div");
+      explanation.className = "explanation";
+      explanation.innerHTML = `<strong>Begründung:</strong> ${q.explanation}`;
+
+      card.appendChild(optionsWrapper);
+      card.appendChild(explanation);
+
+      container.appendChild(card);
+
+      hasCheckedCurrent = false;
+    }
+
+    // =========================
+    //  MODUS-LOGIK
+    // =========================
+    function startMode(mode) {
+      currentMode = mode;
+      mastery = loadMastery();
+      totalAnswered = 0;
+      totalCorrect = 0;
+      hasCheckedCurrent = false;
+
+      const allIndices = questions.map((_, i) => i);
+      if (mode === "normal") {
+        questionOrder = allIndices;
+      } else if (mode === "shuffle") {
+        questionOrder = shuffle(allIndices);
+      } else if (mode === "smart") {
+        const candidates = allIndices.filter(i => {
+          const id = questions[i].id;
+          const streak = mastery[id] || 0;
+          return streak < MASTERY_THRESHOLD;
+        });
+        questionOrder = shuffle(candidates);
+      } else {
+        questionOrder = allIndices;
+      }
+
+      document.getElementById("score").innerHTML = "";
+      currentPos = 0;
+      updateTagline();
+
+      document.getElementById("mode-select").classList.add("hidden");
+      document.getElementById("quiz-area").classList.remove("hidden");
+
+      renderCurrentQuestion();
+      updateMeta();
+      updateScoreBanner();
+    }
+
+    function backToModeSelect() {
+      currentMode = null;
+      questionOrder = [];
+      currentPos = 0;
+      totalAnswered = 0;
+      totalCorrect = 0;
+      hasCheckedCurrent = false;
+
+      document.getElementById("quiz-area").classList.add("hidden");
+      document.getElementById("mode-select").classList.remove("hidden");
+      document.getElementById("questions-container").innerHTML = "";
+      document.getElementById("score").innerHTML = "";
+      document.getElementById("quiz-meta").textContent = "";
+      updateTagline();
+    }
+
+    function checkCurrentQuestion() {
+      if (!questionOrder.length) return;
+
+      const card = document.querySelector(".question-card");
+      if (!card) return;
+
+      const globalIndex = parseInt(card.dataset.globalIndex, 10);
+      const q = questions[globalIndex];
+
+      const radios = card.querySelectorAll('input[type="radio"]');
+      let selectedIndex = -1;
+      radios.forEach((r, i) => {
+        if (r.checked) {
+          selectedIndex = i;
+        }
+      });
+
+      if (selectedIndex === -1) {
+        alert("Bitte zuerst eine Antwort auswählen.");
+        return;
+      }
+
+      const optionLabels = card.querySelectorAll(".option");
+      optionLabels.forEach((opt, i) => {
+        opt.classList.remove("correct", "incorrect", "unselected-correct");
+        if (i === q.correctIndex) {
+          opt.classList.add("correct");
+          if (selectedIndex !== q.correctIndex) {
+            opt.classList.add("unselected-correct");
+          }
+        }
+        if (selectedIndex === i && selectedIndex !== q.correctIndex) {
+          opt.classList.add("incorrect");
+        }
+      });
+
+      const expl = card.querySelector(".explanation");
+      if (expl) {
+        expl.classList.add("visible");
+      }
+
+      if (!hasCheckedCurrent) {
+        totalAnswered++;
+        if (selectedIndex === q.correctIndex) {
+          totalCorrect++;
+          const oldStreak = mastery[q.id] || 0;
+          mastery[q.id] = oldStreak + 1;
+        } else {
+          mastery[q.id] = 0;
+        }
+        saveMastery();
+      }
+
+      hasCheckedCurrent = true;
+      updateScoreBanner();
+    }
+
+    function goToNextQuestion() {
+      if (!questionOrder.length) return;
+
+      if (currentPos < questionOrder.length - 1) {
+        currentPos++;
+        renderCurrentQuestion();
+        updateMeta();
+      } else {
+        // Am Ende der Fragen im aktuellen Modus
+        const scoreDiv = document.getElementById("score");
+        const percent = totalAnswered
+          ? Math.round((totalCorrect / totalAnswered) * 100)
+          : 0;
+        const msg =
+          currentMode === "smart"
+            ? "Du bist mit allen aktuellen Lernfragen durch."
+            : "Du bist am Ende der Fragen in diesem Modus.";
+        scoreDiv.innerHTML = `
+          <div class="score-banner">
+            ${msg} Ergebnis: <strong>${totalCorrect}</strong> von <strong>${totalAnswered}</strong> (${percent}%)
+          </div>
+        `;
+      }
+    }
+
+    // =========================
+    //  INIT
+    // =========================
+    document.getElementById("total-questions-label").textContent = questions.length.toString();
+
+    document.querySelectorAll(".mode-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const mode = btn.getAttribute("data-mode");
+        startMode(mode);
+      });
+    });
+
+    document.getElementById("back-btn").addEventListener("click", backToModeSelect);
+    document.getElementById("check-btn").addEventListener("click", checkCurrentQuestion);
+    document.getElementById("next-btn").addEventListener("click", goToNextQuestion);
+  </script>
+</body>
+</html>
